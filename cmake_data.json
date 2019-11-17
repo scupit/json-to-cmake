@@ -1,0 +1,57 @@
+{
+    "min_cmake_version": "3.7",
+    "project_name": "_cpp_base_project_",
+
+    "default_cpp_standard": "11",
+    "default_c_standard": "99",
+
+    "allowed_cpp_standards": [
+        "11",
+        "14",
+        "17"
+    ],
+
+    "allowed_c_standards": [ "99" ],
+
+    "output": {
+        "_cpp_base_executable_": {
+            "type": "executable",
+            "base_file": "main.cpp",
+            "executable_output_dir": "bin",
+            "r_source_dirs": [ "src" ],
+            "r_header_dirs": [ "include" ],
+            "r_include_dirs": [ ],
+            "include_dirs": [ "include" ]
+        }
+    },
+
+    "imported_libs": { },
+
+    "link_libs": { },
+
+    "targets": {
+        "debug": {
+            "cpp_flags": [
+                "-g",
+                "-Wall",
+                "-Wextra",
+                "-Wconversion",
+                "-Wuninitialized",
+                "-pedantic",
+                "-pedantic-errors"
+            ],
+            "c_flags": [ ]
+        },
+
+        "release": {
+            "cpp_flags": [
+                "-O2",
+                "-DNDEBUG",
+                "-s"
+            ],
+            "c_flags": [ ]
+        }
+    },
+
+    "default_target": "debug"
+}
