@@ -1,5 +1,4 @@
 {
-    "min_cmake_version": "3.7",
     "project_name": "_cpp_base_project_",
 
     "default_cpp_standard": "11",
