@@ -1,36 +1,25 @@
 {
-    "project_name": "_cpp_base_project_",
+    "defaultCppStandard": "11",
 
-    "default_cpp_standard": "11",
-    "default_c_standard": "99",
-
-    "allowed_cpp_standards": [
+    "supportedCppStandards": [
         "11",
         "14",
         "17"
     ],
 
-    "allowed_c_standards": [ "99" ],
-
     "output": {
         "_cpp_base_executable_": {
             "type": "executable",
-            "base_file": "main.cpp",
-            "executable_output_dir": "bin",
-            "r_source_dirs": [ "src" ],
-            "r_header_dirs": [ "include" ],
-            "r_include_dirs": [ ],
-            "include_dirs": [ "include" ]
+            "mainFile": "main.cpp",
+            "rSourceDirs": [ "src" ],
+            "rHeaderDirs": [ "include" ],
+            "includeDirs": [ "include" ]
         }
     },
 
-    "imported_libs": { },
-
-    "link_libs": { },
-
-    "targets": {
-        "debug": {
-            "cpp_flags": [
+    "buildTargets": {
+        "Debug": {
+            "compilerFlags": [
                 "-g",
                 "-Wall",
                 "-Wextra",
@@ -38,19 +27,17 @@
                 "-Wuninitialized",
                 "-pedantic",
                 "-pedantic-errors"
-            ],
-            "c_flags": [ ]
+            ]
         },
 
-        "release": {
-            "cpp_flags": [
+        "Release": {
+            "compilerFlags": [
                 "-O2",
                 "-DNDEBUG",
                 "-s"
-            ],
-            "c_flags": [ ]
+            ]
         }
     },
 
-    "default_target": "debug"
+    "defaultBuildTarget": "Debug"
 }
