@@ -1,12 +1,6 @@
 {
     "defaultCppStandard": "11",
 
-    "supportedCppStandards": [
-        "11",
-        "14",
-        "17"
-    ],
-
     "output": {
         "_cpp_base_executable_": {
             "type": "executable",
@@ -37,7 +31,5 @@
                 "-s"
             ]
         }
-    },
-
-    "defaultBuildTarget": "Debug"
+    }
 }
