@@ -1,4 +1,6 @@
 #include "helpers/FileHelper.hpp"
+
+#include <algorithm>
 #include "helpers/StringHelper.hpp"
 
 std::string FileHelper::asPosix(const std::filesystem::path& thePath) {
@@ -11,6 +13,22 @@ std::string FileHelper::asPosix(std::string pathString) {
 
 std::string FileHelper::joinPath(const std::vector<std::string>& pathSections) {
   return StringHelper::join(pathSections, "/");
+}
+
+std::string FileHelper::normalizeAbsolutePath(std::string pathToModify) {
+  const size_t rootIndex = pathToModify.find(projectRootString);
+
+  if (rootIndex != std::string::npos) {
+    pathToModify.erase(rootIndex, projectRootString.size());
+
+    // Remove leading slashes
+    auto iter = pathToModify.begin();
+    while(*iter == '/') {
+      ++iter;
+    }
+    pathToModify.erase(pathToModify.begin(), iter);
+  }
+  return pathToModify;
 }
 
 std::filesystem::path FileHelper::projectRoot(void) {
@@ -58,6 +76,21 @@ void FileHelper::forFileInDirRecursive(const std::string& relativePath, const st
 
 void FileHelper::forDirRecursive(const std::string& relativePath, const std::function<void(const std::filesystem::path&)>& callback) {
   getItemsThen<std::filesystem::recursive_directory_iterator>(relativePath, callback, isDir);
+}
+
+void FileHelper::getFilesByExtension(std::set<std::string>& fileList, const std::string& relativePath, const std::vector<std::string>& extensionsMatching, const bool shouldSearchRecursively) {
+  auto callback = [&fileList, &extensionsMatching](const std::filesystem::path& filePath) {
+    if (filePath.has_extension() && std::find(extensionsMatching.begin(), extensionsMatching.end(), filePath.extension()) != extensionsMatching.end()) {
+      fileList.insert(normalizeAbsolutePath(filePath.string()));
+    }
+  };
+
+  if (shouldSearchRecursively) {
+    forFileInDirRecursive(relativePath, callback); 
+  }
+  else {
+    forFileInDir(relativePath, callback);
+  }
 }
 
 // HELPERS

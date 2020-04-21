@@ -3,14 +3,17 @@
 
 #include <filesystem>
 #include <functional>
+#include <set>
 #include <string>
 #include <vector>
 
 namespace FileHelper {
+
 	// File name formatting and resolution
 	std::string asPosix(const std::filesystem::path&);
 	std::string asPosix(std::string);
   std::string joinPath(const std::vector<std::string>&);
+	std::string normalizeAbsolutePath(std::string);
 	std::filesystem::path projectRoot(void);
 	std::string resolve(const std::string&, const std::string&);
 	std::string resolve(const std::filesystem::path&, const std::string&);
@@ -27,9 +30,14 @@ namespace FileHelper {
 	void forFileInDirRecursive(const std::string&, const std::function<void(const std::filesystem::path&)>&);
 	void forDirRecursive(const std::string&, const std::function<void(const std::filesystem::path&)>&);
 
+	void getFilesByExtension(std::set<std::string>&, const std::string&, const std::vector<std::string>&, const bool);
+
 	// Helpers
 	bool isFile(const std::filesystem::directory_entry&);
 	bool isDir(const std::filesystem::directory_entry&);
+
+	// CONSTANTS
+	const std::string projectRootString = asPosix(projectRoot().string());
 }
 
 template <class T>

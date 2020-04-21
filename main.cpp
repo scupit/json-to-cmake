@@ -1,17 +1,22 @@
 #include <iostream>
 #include <string>
-#include <vector>
+#include <set>
 
-#include "helpers/FileHelper.hpp"
+#include "FileRetriever.hpp"
+#include "JSON/JsonParser.hpp"
+#include "constants/Tags.hpp"
 
 using namespace std;
-using namespace FileHelper;
 
-int main(int argc, const char** argv) {
-  forFileInDirRecursive(argc > 1 ? argv[1] : ".", [](const filesystem::path& file) {
-    if (file.has_extension() && file.extension() == ".hpp") {
-      cout << file << endl;
-    }
-  });
+int main(void) {
+  set<string> fileNames;
+  JsonParser jParser("cmake_data.json");
+
+  FileRetriever::loadSourceFiles(fileNames, jParser.getJsonReference()[Tags::OUTPUT]["gen-cmake"]);
+
+  for (const string& str : fileNames) {
+    cout << str << endl;
+  }
+
   return 0;
 }

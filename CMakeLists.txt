@@ -72,6 +72,8 @@ find_library( JSON_0
 # Output executable: gen-cmake
 set( gen-cmake_HEADERS
 	${JSON_HEADERS}
+	${PROJECT_SOURCE_DIR}/include/FileRetriever.hpp
+	${PROJECT_SOURCE_DIR}/include/constants/Tags.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/FileHelper.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/StringHelper.hpp
 )
@@ -79,6 +81,7 @@ set( gen-cmake_HEADERS
 set( gen-cmake_SOURCES
 	${gen-cmake_HEADERS}
 	${PROJECT_SOURCE_DIR}/main.cpp
+	${PROJECT_SOURCE_DIR}/src/FileRetriever.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/FileHelper.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/StringHelper.cpp
 )
