@@ -1,14 +1,33 @@
 {
-    "defaultCppStandard": "11",
+    "defaultCppStandard": "17",
 
     "output": {
-        "_cpp_base_executable_": {
+        "gen-cmake": {
             "type": "executable",
             "mainFile": "main.cpp",
             "rSourceDirs": [ "src" ],
             "rHeaderDirs": [ "include" ],
             "includeDirs": [ "include" ]
         }
+    },
+
+    "importedLibs": {
+        "JSON": {
+            "gitRepo": "https://github.com/scupit/JSON-in-cpp.git",
+            "cloneRepo": true,
+            "rootDir": "dep/lib/JSON",
+            "libFiles": [
+                "jParser"
+            ],
+            "rHeaderDirs": [ "dep/include/JSON" ],
+            "includeDirs": [ "dep/include"]
+        }
+    },
+
+    "links": {
+        "gen-cmake": [
+            "JSON"
+        ]
     },
 
     "buildTargets": {
