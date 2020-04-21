@@ -2,22 +2,16 @@
 #include <string>
 #include <vector>
 
-#include "FileHelper.hpp"
+#include "helpers/FileHelper.hpp"
+
 using namespace std;
 using namespace FileHelper;
 
-void printVector(const std::vector<std::string>& vec) {
-  for (const auto& item : vec) {
-    cout << item << endl;
-  }
-}
-
-int main() {
-
-  // printVector(splitPath(projectRoot().string()));
-
-  cout << resolveFromRoot("../../Something") << endl;
-
-  // cout << filesystem::current_path() << endl;
+int main(int argc, const char** argv) {
+  forFileInDirRecursive(argc > 1 ? argv[1] : ".", [](const filesystem::path& file) {
+    if (file.has_extension() && file.extension() == ".hpp") {
+      cout << file << endl;
+    }
+  });
   return 0;
 }

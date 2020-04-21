@@ -1,4 +1,4 @@
-#include "StringHelper.hpp"
+#include "helpers/StringHelper.hpp"
 
 std::vector<std::string> StringHelper::split(const std::string& toSplit, const std::string& splitter) {
   std::vector<std::string> sections;

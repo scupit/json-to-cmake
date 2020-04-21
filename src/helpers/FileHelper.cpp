@@ -1,5 +1,5 @@
-#include "FileHelper.hpp"
-#include "StringHelper.hpp"
+#include "helpers/FileHelper.hpp"
+#include "helpers/StringHelper.hpp"
 
 std::string FileHelper::asPosix(const std::filesystem::path& thePath) {
   return asPosix(thePath.string());
@@ -46,4 +46,25 @@ std::string FileHelper::resolveFromRoot(const std::string& pathToResolve) {
 
 std::vector<std::string> FileHelper::splitPath(const std::string& pathToSplit) {
   return StringHelper::split(pathToSplit, "/");
+}
+
+void FileHelper::forFileInDir(const std::string& relativePath, const std::function<void(const std::filesystem::path&)>& callback) {
+  getItemsThen<std::filesystem::directory_iterator>(relativePath, callback, isFile);
+}
+
+void FileHelper::forFileInDirRecursive(const std::string& relativePath, const std::function<void(const std::filesystem::path&)>& callback) {
+  getItemsThen<std::filesystem::recursive_directory_iterator>(relativePath, callback, isFile);
+}
+
+void FileHelper::forDirRecursive(const std::string& relativePath, const std::function<void(const std::filesystem::path&)>& callback) {
+  getItemsThen<std::filesystem::recursive_directory_iterator>(relativePath, callback, isDir);
+}
+
+// HELPERS
+bool FileHelper::isFile(const std::filesystem::directory_entry& entry) {
+  return entry.is_regular_file();
+}
+
+bool FileHelper::isDir(const std::filesystem::directory_entry& entry) {
+  return entry.is_directory();
 }

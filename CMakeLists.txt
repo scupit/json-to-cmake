@@ -72,15 +72,15 @@ find_library( JSON_0
 # Output executable: gen-cmake
 set( gen-cmake_HEADERS
 	${JSON_HEADERS}
-	${PROJECT_SOURCE_DIR}/include/FileHelper.hpp
-	${PROJECT_SOURCE_DIR}/include/StringHelper.hpp
+	${PROJECT_SOURCE_DIR}/include/helpers/FileHelper.hpp
+	${PROJECT_SOURCE_DIR}/include/helpers/StringHelper.hpp
 )
 
 set( gen-cmake_SOURCES
 	${gen-cmake_HEADERS}
 	${PROJECT_SOURCE_DIR}/main.cpp
-	${PROJECT_SOURCE_DIR}/src/FileHelper.cpp
-	${PROJECT_SOURCE_DIR}/src/StringHelper.cpp
+	${PROJECT_SOURCE_DIR}/src/helpers/FileHelper.cpp
+	${PROJECT_SOURCE_DIR}/src/helpers/StringHelper.cpp
 )
 
 set( gen-cmake_INCLUDE_DIRS
