@@ -9,7 +9,7 @@
 #include "Logger.hpp"
 
 OutputBase::OutputBase(const std::string& name, JsonValue& outputItemData)
-  : name(name),
+  : m_name(name),
     linkedOutputs(std::vector<OutputItem*>()),
     linkedImportedLibs(std::vector<ImportedLib*>()),
     linkedGroups(std::vector<OutputGroup*>()),
@@ -22,14 +22,13 @@ OutputBase::OutputBase(const std::string& name, JsonValue& outputItemData)
   FileRetriever::loadHeaderFiles(m_headers, outputItemData);
   FileRetriever::loadSourceFiles(m_sources, outputItemData);
   FileRetriever::loadIncludeDirs(m_includeDirs, outputItemData);
-  loadCanToggleType(outputItemData);
 }
 
 OutputBase::~OutputBase() { }
 
 void OutputBase::loadTypeBase(JsonValue& outputItemData, const std::string& itemTypeString) {
   if (!outputItemData.hasOwnProperty(Tags::TYPE)) {
-    throw std::logic_error(std::string(Tags::TYPE) + " missing from " + itemTypeString + name);
+    throw std::logic_error(std::string(Tags::TYPE) + " missing from " + itemTypeString + m_name);
   }
 
   if (outputItemData[Tags::TYPE] == Tags::EXE) {
@@ -44,8 +43,117 @@ void OutputBase::loadTypeBase(JsonValue& outputItemData, const std::string& item
 }
 
 void OutputBase::loadCanToggleType(JsonValue& outputItemData) {
-
   if (isLibraryType() && outputItemData.hasOwnProperty(Tags::LIB_TYPE_TOGGLE_POSSIBLE)) {
     canToggleLibraryType = outputItemData[Tags::LIB_TYPE_TOGGLE_POSSIBLE].asBool();
   }
+}
+
+bool OutputBase::hasLinkedLibs() const {
+  return !(linkedGroups.empty() || linkedImportedLibs.empty() || linkedOutputs.empty());
+}
+
+bool OutputBase::hasOrInheritsHeaders() const {
+  for (const ImportedLib* linkedLib : linkedImportedLibs) {
+    if (linkedLib->hasHeaders()) {
+      return true;
+    }
+  }
+
+  for (const OutputItem* linkedLib : linkedOutputs) {
+    if (linkedLib->hasOrInheritsHeaders()) {
+      return true;
+    }
+  }
+
+  for (OutputGroup* linkedGroup : linkedGroups) {
+    for (const OutputItem& output : linkedGroup->outputs()) {
+      if (output.hasOrInheritsHeaders()) {
+        return true;
+      }
+    } 
+
+    if (linkedGroup->hasOrInheritsHeaders()) {
+      return true;
+    }
+  }
+  return !m_headers.empty();
+}
+
+bool OutputBase::hasOrInheritsIncludeDirs() const {
+  for (const ImportedLib* linkedLib : linkedImportedLibs) {
+    if (linkedLib->hasIncludeDirs()) {
+      return true;
+    }
+  }
+
+  for (const OutputItem* linkedLib : linkedOutputs) {
+    if (linkedLib->hasOrInheritsIncludeDirs()) {
+      return true;
+    }
+  }
+
+  for (OutputGroup* linkedGroup : linkedGroups) {
+    for (const OutputItem& output : linkedGroup->outputs()) {
+      if (output.hasOrInheritsIncludeDirs()) {
+        return true;
+      }
+    }
+
+    if (linkedGroup->hasOrInheritsIncludeDirs()) {
+      return true;
+    }
+  }
+  return !m_includeDirs.empty();
+}
+
+void OutputBase::linkLib(ImportedLib* libToLink) {
+  linkedImportedLibs.push_back(libToLink);
+}
+
+void OutputBase::linkLib(OutputItem* libToLink) {
+  linkedOutputs.push_back(libToLink);
+}
+
+void OutputBase::linkGroup(OutputGroup* groupToLink) {
+  linkedGroups.push_back(groupToLink);
+}
+
+std::vector<OutputItem*> OutputBase::getAllOutputsFromLinkedGroups() {
+  std::vector<OutputItem*> flattenedGroupOutputs;
+
+  for (OutputGroup* linkedGroup : linkedGroups) {
+    if (linkedGroup->isLibraryType()) {
+      for (OutputItem& output : linkedGroup->outputs()) {
+        flattenedGroupOutputs.push_back(&output);
+      }
+    }
+  }
+  return flattenedGroupOutputs;
+}
+
+bool OutputBase::isPartOfImportedLibLinkTree(const ImportedLib& importedLib) const {
+  for (const ImportedLib* linkedLib : linkedImportedLibs) {
+    if (importedLib.name() == linkedLib->name()) {
+      return true;
+    }
+  }
+
+  for (const OutputItem* linkedLib : linkedOutputs) {
+    if (linkedLib->isPartOfImportedLibLinkTree(importedLib)) {
+      return true;
+    }
+  }
+
+  for (const OutputGroup* linkedGroup : linkedGroups) {
+    if (linkedGroup->isPartOfImportedLibLinkTree(importedLib)) {
+      return true;
+    }
+
+    for (const OutputItem* output : linkedGroup->outputs) {
+      if (output->isPartOfImportedLibLinkTree(importedLib)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }

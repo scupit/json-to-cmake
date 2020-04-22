@@ -12,6 +12,8 @@ OutputItem::OutputItem(const std::string& name, JsonValue& outputItemData)
   catch (std::logic_error& e) {
     logErrorThenQuit(e.what());
   }
+
+  loadCanToggleType(outputItemData);
 }
 
 OutputItem::~OutputItem() { }

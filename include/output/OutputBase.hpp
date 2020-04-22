@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 #include "JSON/JsonValue.hpp"
+#include "ImportedLib.hpp"
 
-class ImportedLib;
 class OutputGroup;
 class OutputItem;
 
@@ -19,7 +19,7 @@ enum class OutputType {
 
 class OutputBase {
 	protected:
-		std::string name;
+		const std::string m_name;
 
 		std::vector<OutputItem*> linkedOutputs;
 		std::vector<ImportedLib*> linkedImportedLibs;
@@ -36,22 +36,34 @@ class OutputBase {
 		// Functions
 		void loadTypeBase(JsonValue&, const std::string&);
 		virtual void loadType(JsonValue&) = 0;
+		void loadCanToggleType(JsonValue&);
 
 	public:
 		OutputBase(const std::string&, JsonValue&);
 		virtual ~OutputBase();
 
-		inline std::set<std::string>& headers() { return m_headers; }
-		inline std::set<std::string>& sources() { return m_sources; }
-		inline std::set<std::string>& includeDirs() { return m_includeDirs; }
+		inline const std::string& name() const { return m_name; }
 
-		inline bool isExeType() { return m_type == OutputType::EXE; }
-		inline bool isSharedLibType() { return m_type == OutputType::SHARED_LIB; }
-		inline bool isStaticLibType() { return m_type == OutputType::STATIC_LIB; }
-		inline bool isLibraryType() { return isSharedLibType() || isStaticLibType(); }
+		inline const std::set<std::string>& headers() const { return m_headers; }
+		inline const std::set<std::string>& sources() const { return m_sources; }
+		inline const std::set<std::string>& includeDirs() const { return m_includeDirs; }
 
-	private:
-		void loadCanToggleType(JsonValue&);
+		inline bool isExeType() const { return m_type == OutputType::EXE; }
+		inline bool isSharedLibType() const { return m_type == OutputType::SHARED_LIB; }
+		inline bool isStaticLibType() const { return m_type == OutputType::STATIC_LIB; }
+		inline bool isLibraryType() const { return isSharedLibType() || isStaticLibType(); }
+
+		virtual bool hasLinkedLibs() const;
+		virtual bool hasOrInheritsHeaders() const;
+		virtual bool hasOrInheritsIncludeDirs() const;
+
+		std::vector<OutputItem*> getAllOutputsFromLinkedGroups();
+
+		void linkLib(ImportedLib*);
+		void linkLib(OutputItem*);
+		void linkGroup(OutputGroup*);
+
+		bool isPartOfImportedLibLinkTree(const ImportedLib&) const;
 };
 
 #endif
