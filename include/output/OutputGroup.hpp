@@ -11,12 +11,18 @@ class OutputGroup : public OutputBase{
 		std::vector<OutputItem> m_outputs;	
 
 		void loadType(JsonValue&) override;
+		void loadOutputs(JsonValue&);
+
+		bool isOutputItemCompatible(const OutputItem&) const;
 
 	public:
 		OutputGroup(const std::string&, JsonValue&);
 		~OutputGroup();
 
 		inline std::vector<OutputItem>& outputs() { return m_outputs; }
+
+		std::string getPrefixedName() const;
+		bool hasLibraryThatCanBeToggled() const;
 };
 
 #endif

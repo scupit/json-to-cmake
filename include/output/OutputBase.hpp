@@ -25,7 +25,7 @@ class OutputBase {
 		std::vector<ImportedLib*> linkedImportedLibs;
 		std::vector<OutputGroup*> linkedGroups;
 
-		bool canToggleLibraryType;
+		bool m_canToggleLibraryType;
 
 		OutputType m_type;
 
@@ -49,6 +49,7 @@ class OutputBase {
 		inline const std::set<std::string>& sources() const { return m_sources; }
 		inline const std::set<std::string>& includeDirs() const { return m_includeDirs; }
 
+		inline bool canToggleLIbraryType() const { return m_canToggleLibraryType; }
 		inline bool isExeType() const { return m_type == OutputType::EXE; }
 		inline bool isSharedLibType() const { return m_type == OutputType::SHARED_LIB; }
 		inline bool isStaticLibType() const { return m_type == OutputType::STATIC_LIB; }
@@ -66,6 +67,7 @@ class OutputBase {
 		void linkGroup(OutputGroup*);
 
 		virtual bool isPartOfImportedLibLinkTree(const ImportedLib&) const;
+		std::string getTypeString() const;
 };
 
 #endif

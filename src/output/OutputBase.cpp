@@ -13,7 +13,7 @@ OutputBase::OutputBase(const std::string& name, JsonValue& outputItemData)
     linkedOutputs(std::vector<OutputItem*>()),
     linkedImportedLibs(std::vector<ImportedLib*>()),
     linkedGroups(std::vector<OutputGroup*>()),
-    canToggleLibraryType(false),
+    m_canToggleLibraryType(false),
     m_type(OutputType::NOT_SPECIFIED),
     m_headers(std::set<std::string>()),
     m_sources(std::set<std::string>()),
@@ -44,7 +44,7 @@ void OutputBase::loadTypeBase(JsonValue& outputItemData, const std::string& item
 
 void OutputBase::loadCanToggleType(JsonValue& outputItemData) {
   if (isLibraryType() && outputItemData.hasOwnProperty(Tags::LIB_TYPE_TOGGLE_POSSIBLE)) {
-    canToggleLibraryType = outputItemData[Tags::LIB_TYPE_TOGGLE_POSSIBLE].asBool();
+    m_canToggleLibraryType = outputItemData[Tags::LIB_TYPE_TOGGLE_POSSIBLE].asBool();
   }
 }
 
@@ -166,4 +166,12 @@ bool OutputBase::isPartOfImportedLibLinkTree(const ImportedLib& importedLib) con
     }
   }
   return false;
+}
+
+std::string OutputBase::getTypeString() const {
+  if (isSharedLibType())
+    return Tags::SHARED_LIB;
+  else if (isStaticLibType())
+    return Tags::STATIC_LIB;
+  return Tags::EXE;
 }
