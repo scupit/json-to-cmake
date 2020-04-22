@@ -65,7 +65,7 @@ class OutputBase {
 		void linkLib(OutputItem*);
 		void linkGroup(OutputGroup*);
 
-		bool isPartOfImportedLibLinkTree(const ImportedLib&) const;
+		virtual bool isPartOfImportedLibLinkTree(const ImportedLib&) const;
 };
 
 #endif

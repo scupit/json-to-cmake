@@ -18,10 +18,21 @@ class OutputItem : public OutputBase {
 		OutputGroup* groupContainedIn;
 
 		void loadType(JsonValue&) override;
+		void loadMainFile(JsonValue&);
 
 	public:
 		OutputItem(const std::string&, JsonValue&, OutputGroup* = nullptr);
 		~OutputItem();
+
+		inline bool isContainedInGroup() const { return groupContainedIn != nullptr; }
+
+		bool parentGroupHasHeaders() const;
+		bool parentGroupHasIncludeDirs() const;
+
+		bool hasOrInheritsHeaders() const override;
+		bool hasOrInheritsIncludeDirs() const override;
+
+		bool isPartOfImportedLibLinkTree(const ImportedLib&) const override;
 };
 
 #endif
