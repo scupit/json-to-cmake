@@ -118,17 +118,27 @@ void OutputBase::linkGroup(OutputGroup* groupToLink) {
   linkedGroups.push_back(groupToLink);
 }
 
-std::vector<OutputItem*> OutputBase::getAllOutputsFromLinkedGroups() {
-  std::vector<OutputItem*> flattenedGroupOutputs;
-
+void OutputBase::getAllOutputsFromLinkedGroups(std::vector<OutputItem*>& outputList) {
   for (OutputGroup* linkedGroup : linkedGroups) {
     if (linkedGroup->isLibraryType()) {
       for (OutputItem& output : linkedGroup->outputs()) {
-        flattenedGroupOutputs.push_back(&output);
+        outputList.push_back(&output);
       }
     }
   }
-  return flattenedGroupOutputs;
+}
+
+void OutputBase::getAllLinkedOutputs(std::vector<OutputItem*>& outputList) {
+  for (OutputItem* linkedOutput : linkedOutputs) {
+    outputList.push_back(linkedOutput);
+  }
+  getAllOutputsFromLinkedGroups(outputList);
+}
+
+void OutputBase::getAllLinkedImportedLibs(std::vector<ImportedLib*>& importedLibList) {
+  for (ImportedLib* linkedImport : linkedImportedLibs) {
+    importedLibList.push_back(linkedImport);
+  }
 }
 
 bool OutputBase::isPartOfImportedLibLinkTree(const ImportedLib& importedLib) const {

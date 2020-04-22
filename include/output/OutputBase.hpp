@@ -37,6 +37,7 @@ class OutputBase {
 		void loadTypeBase(JsonValue&, const std::string&);
 		virtual void loadType(JsonValue&) = 0;
 		void loadCanToggleType(JsonValue&);
+		void getAllOutputsFromLinkedGroups(std::vector<OutputItem*>&);
 
 	public:
 		OutputBase(const std::string&, JsonValue&);
@@ -57,7 +58,8 @@ class OutputBase {
 		virtual bool hasOrInheritsHeaders() const;
 		virtual bool hasOrInheritsIncludeDirs() const;
 
-		std::vector<OutputItem*> getAllOutputsFromLinkedGroups();
+		void getAllLinkedOutputs(std::vector<OutputItem*>&);
+		void getAllLinkedImportedLibs(std::vector<ImportedLib*>&);
 
 		void linkLib(ImportedLib*);
 		void linkLib(OutputItem*);

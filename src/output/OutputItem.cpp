@@ -3,8 +3,13 @@
 #include <stdexcept>
 #include "Logger.hpp"
 
-OutputItem::OutputItem(const std::string& name, JsonValue& outputItemData)
-  : OutputBase(name, outputItemData)
+const std::string OutputItem::exeOutputDir = "bin";
+const std::string OutputItem::libOutputDir = "lib";
+const std::string OutputItem::archiveOutputDir = "lib";
+
+OutputItem::OutputItem(const std::string& name, JsonValue& outputItemData, OutputGroup* groupContainedIn)
+  : OutputBase(name, outputItemData),
+    groupContainedIn(groupContainedIn)
 {
   try {
     loadType(outputItemData);
