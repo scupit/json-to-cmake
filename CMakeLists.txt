@@ -73,17 +73,25 @@ find_library( JSON_0
 set( gen-cmake_HEADERS
 	${JSON_HEADERS}
 	${PROJECT_SOURCE_DIR}/include/FileRetriever.hpp
+	${PROJECT_SOURCE_DIR}/include/Logger.hpp
 	${PROJECT_SOURCE_DIR}/include/constants/Tags.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/FileHelper.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/StringHelper.hpp
+	${PROJECT_SOURCE_DIR}/include/output/OutputBase.hpp
+	${PROJECT_SOURCE_DIR}/include/output/OutputGroup.hpp
+	${PROJECT_SOURCE_DIR}/include/output/OutputItem.hpp
 )
 
 set( gen-cmake_SOURCES
 	${gen-cmake_HEADERS}
 	${PROJECT_SOURCE_DIR}/main.cpp
 	${PROJECT_SOURCE_DIR}/src/FileRetriever.cpp
+	${PROJECT_SOURCE_DIR}/src/Logger.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/FileHelper.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/StringHelper.cpp
+	${PROJECT_SOURCE_DIR}/src/output/OutputBase.cpp
+	${PROJECT_SOURCE_DIR}/src/output/OutputGroup.cpp
+	${PROJECT_SOURCE_DIR}/src/output/OutputItem.cpp
 )
 
 set( gen-cmake_INCLUDE_DIRS

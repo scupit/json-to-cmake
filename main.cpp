@@ -2,21 +2,22 @@
 #include <string>
 #include <set>
 
-#include "FileRetriever.hpp"
 #include "JSON/JsonParser.hpp"
+#include "output/OutputItem.hpp"
 #include "constants/Tags.hpp"
 
 using namespace std;
 
 int main(void) {
-  set<string> fileNames;
+
   JsonParser jParser("cmake_data.json");
+  OutputItem item("gen-cmake", jParser.getJsonReference()[Tags::OUTPUT]["gen-cmake"]);
 
-  FileRetriever::loadSourceFiles(fileNames, jParser.getJsonReference()[Tags::OUTPUT]["gen-cmake"]);
+  // for (const string& str : item.includeDirs()) {
+  //   cout << str << endl;
+  // }
 
-  for (const string& str : fileNames) {
-    cout << str << endl;
-  }
+  cout << item.isLibraryType() << endl;
 
   return 0;
 }
