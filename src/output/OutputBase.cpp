@@ -154,13 +154,13 @@ bool OutputBase::isPartOfImportedLibLinkTree(const ImportedLib& importedLib) con
     }
   }
 
-  for (const OutputGroup* linkedGroup : linkedGroups) {
+  for (OutputGroup* linkedGroup : linkedGroups) {
     if (linkedGroup->isPartOfImportedLibLinkTree(importedLib)) {
       return true;
     }
 
-    for (const OutputItem* output : linkedGroup->outputs) {
-      if (output->isPartOfImportedLibLinkTree(importedLib)) {
+    for (const OutputItem& output : linkedGroup->outputs()) {
+      if (output.isPartOfImportedLibLinkTree(importedLib)) {
         return true;
       }
     }

@@ -1,23 +1,16 @@
 #include <iostream>
-#include <string>
-#include <set>
-
-#include "JSON/JsonParser.hpp"
-#include "output/OutputItem.hpp"
-#include "constants/Tags.hpp"
+#include "AllData.hpp"
 
 using namespace std;
 
 int main(void) {
+  AllData data;
 
-  JsonParser jParser("cmake_data.json");
-  OutputItem item("gen-cmake", jParser.getJsonReference()[Tags::OUTPUT]["gen-cmake"]);
-
-  // for (const string& str : item.includeDirs()) {
-  //   cout << str << endl;
-  // }
-
-  cout << item.isLibraryType() << endl;
+  for (auto& item : data.outputGroups()) {
+    for (auto& h : item.includeDirs()) {
+      cout << h << endl;
+    }
+  }
 
   return 0;
 }

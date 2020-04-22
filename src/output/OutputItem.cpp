@@ -12,7 +12,8 @@ const std::string OutputItem::archiveOutputDir = "lib";
 
 OutputItem::OutputItem(const std::string& name, JsonValue& outputItemData, OutputGroup* groupContainedIn)
   : OutputBase(name, outputItemData),
-    groupContainedIn(groupContainedIn)
+    groupContainedIn(groupContainedIn),
+    mainFile(std::string())
 {
   try {
     loadType(outputItemData);

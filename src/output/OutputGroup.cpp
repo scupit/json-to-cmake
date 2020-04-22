@@ -36,7 +36,7 @@ void OutputGroup::loadOutputs(JsonValue& outputGroupData) {
     }
 
     if (!outputItemData.hasOwnProperty(Tags::LIB_TYPE_TOGGLE_POSSIBLE)) {
-      outputItemData[Tags::LIB_TYPE_TOGGLE_POSSIBLE] = canToggleLibraryType;
+      outputItemData[Tags::LIB_TYPE_TOGGLE_POSSIBLE] = m_canToggleLibraryType;
     }
 
     m_outputs.emplace_back(name, outputItemData, this);
