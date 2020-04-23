@@ -37,7 +37,7 @@ namespace FileHelper {
 	bool isDir(const std::filesystem::directory_entry&);
 
 	// CONSTANTS
-	const std::string projectRootString = asPosix(projectRoot().string());
+	extern std::string projectRootString;
 }
 
 template <class T>

@@ -3,6 +3,8 @@
 #include <algorithm>
 #include "helpers/StringHelper.hpp"
 
+std::string FileHelper::projectRootString = std::filesystem::current_path().string();
+
 std::string FileHelper::asPosix(const std::filesystem::path& thePath) {
   return asPosix(thePath.string());
 }
@@ -32,7 +34,7 @@ std::string FileHelper::normalizeAbsolutePath(std::string pathToModify) {
 }
 
 std::filesystem::path FileHelper::projectRoot(void) {
-  return std::filesystem::current_path();
+  return std::filesystem::path(projectRootString);
 }
 
 std::string FileHelper::resolve(const std::string& resolvingFrom, const std::string& relativeResolvingTo) {

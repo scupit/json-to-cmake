@@ -2,22 +2,28 @@
 
 #include <stdexcept>
 #include "JSON/JsonParser.hpp"
+#include "JSON/JsonValue.hpp"
 #include "helpers/FileHelper.hpp"
 #include "constants/Globals.hpp"
 #include "constants/Tags.hpp"
 #include "Logger.hpp"
+#include <iostream>
 
-AllData::AllData()
+AllData::AllData(const char* projectRoot)
   : m_outputs(std::vector<OutputItem>()),
     m_outputGroups(std::vector<OutputGroup>())
 {
+
+  const std::string jsonFilePath = FileHelper::resolve(std::string(projectRoot), Globals::JSON_FILE_NAME);
+
   try {
-    JsonParser jsonData(FileHelper::resolveFromRoot(Globals::JSON_FILE_NAME));
-    loadOutputs(jsonData.getJsonReference());
-    loadGroups(jsonData.getJsonReference());
+    JsonValue jsonData = JsonParser(jsonFilePath).getJsonCopy();
+    loadOutputs(jsonData);
+    loadGroups(jsonData);
+    loadImportedLibs(jsonData);
   }
   catch (std::runtime_error& e) {
-    logErrorThenQuit(FileHelper::resolveFromRoot(Globals::JSON_FILE_NAME) + " does not exist.");
+    logErrorThenQuit(jsonFilePath + " does not exist.");
   }
 }
 

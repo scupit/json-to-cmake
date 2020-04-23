@@ -18,11 +18,12 @@ class AllData {
 		void loadImportedLibs(JsonValue&);
 
 	public:
-		AllData();
+		AllData(const char*);
 		~AllData();
 
 		inline std::vector<OutputItem>& outputs() { return m_outputs; }
 		inline std::vector<OutputGroup>& outputGroups() { return m_outputGroups; }
+		inline std::vector<ImportedLib>& importedLibs() { return m_importedLibs; }
 };
 
 #endif
