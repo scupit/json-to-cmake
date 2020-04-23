@@ -38,3 +38,17 @@ void AllData::loadGroups(JsonValue& jsonData) {
     }
   }
 }
+
+void AllData::loadImportedLibs(JsonValue& jsonData) {
+  if (jsonData.hasOwnProperty(Tags::IMPORTED_LIBRARIES)) {
+    for (auto& [name, importedLibData] : jsonData[Tags::IMPORTED_LIBRARIES].asMap()) {
+      ImportedLib lib(name, importedLibData);
+      m_importedLibs.push_back(lib);
+      // TODO: Clone the associated git repo
+      // if (lib.shouldCloneRepo() && lib.hasRepoToClone()) {
+
+      // }
+    }
+  }
+  // TODO: Generate dep directories
+}

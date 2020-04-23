@@ -30,10 +30,15 @@ class ImportedLib {
 		ImportedLib(const std::string&, JsonValue&);
 		~ImportedLib();
 
-		inline const std::string& name() const { return m_name; }
+		const std::string& name() const { return m_name; }
+		const std::set<std::string>& headers() { return m_headers; }
+		const std::set<std::string>& includeDirs() { return m_includeDirs; }
+		const std::vector<std::string>& libFiles() { return m_libraryFileNames; }
 
 		inline bool hasHeaders() const { return !m_headers.empty(); }
 		inline bool hasIncludeDirs() const { return !m_includeDirs.empty(); }
+		inline bool shouldCloneRepo() const { return m_shouldCloneRepo; }
+		inline bool hasRepoToClone() const { return !m_gitRepoToClone.empty(); }
 };
 
 #endif

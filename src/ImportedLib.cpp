@@ -61,4 +61,7 @@ void ImportedLib::loadGeneratedDirname(JsonValue& importedLibData) {
   if (importedLibData.hasOwnProperty(Tags::IMPORT_GENERATED_DIRNAME)) {
     m_generatedDepDirname = importedLibData[Tags::IMPORT_GENERATED_DIRNAME].asString();
   }
+  else {
+    m_generatedDepDirname = m_name;
+  }
 }

@@ -4,15 +4,18 @@
 #include "JSON/JsonValue.hpp"
 #include "output/OutputItem.hpp"
 #include "output/OutputGroup.hpp"
+#include "ImportedLib.hpp"
 #include <vector>
 
 class AllData {
 	private:
 		std::vector<OutputItem> m_outputs;
 		std::vector<OutputGroup> m_outputGroups;
+		std::vector<ImportedLib> m_importedLibs;
 
 		void loadOutputs(JsonValue&);
 		void loadGroups(JsonValue&);
+		void loadImportedLibs(JsonValue&);
 
 	public:
 		AllData();
