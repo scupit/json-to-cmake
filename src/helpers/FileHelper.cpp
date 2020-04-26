@@ -96,10 +96,29 @@ void FileHelper::getFilesByExtension(std::set<std::string>& fileList, const std:
 }
 
 // HELPERS
+
+void FileHelper::createRelativeToRoot(const std::string& relativePathString) {
+  std::vector<std::string> sectionsToCreate = splitPath(projectRoot().string());
+
+  for (std::string& str : splitPath(relativePathString)) {
+    sectionsToCreate.push_back(str);
+  }
+
+  std::filesystem::create_directories(std::filesystem::path(joinPath(sectionsToCreate)));
+}
+
 bool FileHelper::isFile(const std::filesystem::directory_entry& entry) {
   return entry.is_regular_file();
 }
 
+bool FileHelper::isFile(const std::string& fileName) {
+  return std::filesystem::is_regular_file(std::filesystem::path(fileName));
+}
+
 bool FileHelper::isDir(const std::filesystem::directory_entry& entry) {
   return entry.is_directory();
+}
+
+bool FileHelper::isDir(const std::string& dirName) {
+  return std::filesystem::is_directory(std::filesystem::path(dirName));
 }

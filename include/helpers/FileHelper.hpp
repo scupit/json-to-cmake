@@ -33,8 +33,11 @@ namespace FileHelper {
 	void getFilesByExtension(std::set<std::string>&, const std::string&, const std::vector<std::string>&, const bool);
 
 	// Helpers
+	void createRelativeToRoot(const std::string&);
 	bool isFile(const std::filesystem::directory_entry&);
+	bool isFile(const std::string&);
 	bool isDir(const std::filesystem::directory_entry&);
+	bool isDir(const std::string&);
 
 	// CONSTANTS
 	extern std::string projectRootString;

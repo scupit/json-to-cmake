@@ -4,6 +4,7 @@
 #include "JSON/JsonParser.hpp"
 #include "JSON/JsonValue.hpp"
 #include "helpers/FileHelper.hpp"
+#include "helpers/GitHelper.hpp"
 #include "constants/Globals.hpp"
 #include "constants/Tags.hpp"
 #include "Logger.hpp"
@@ -50,11 +51,22 @@ void AllData::loadImportedLibs(JsonValue& jsonData) {
     for (auto& [name, importedLibData] : jsonData[Tags::IMPORTED_LIBRARIES].asMap()) {
       ImportedLib lib(name, importedLibData);
       m_importedLibs.push_back(lib);
-      // TODO: Clone the associated git repo
-      // if (lib.shouldCloneRepo() && lib.hasRepoToClone()) {
 
-      // }
+      FileHelper::createRelativeToRoot(FileHelper::joinPath({
+        Globals::DEPENDENCY_DIR,
+        Globals::DEPENDENCY_LIB_DIR,
+        lib.generatedDirname()
+      }));
+
+      FileHelper::createRelativeToRoot(FileHelper::joinPath({
+        Globals::DEPENDENCY_DIR,
+        Globals::DEPENDENCY_INCLUDE_DIR,
+        lib.generatedDirname()
+      }));
+
+      if (lib.shouldCloneRepo() && lib.hasRepoToClone()) {
+        cloneRepoIfNonexistent(lib.gitRepoToClone(), lib.generatedDirname());
+      }
     }
   }
-  // TODO: Generate dep directories
 }

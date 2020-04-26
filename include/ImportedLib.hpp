@@ -31,9 +31,11 @@ class ImportedLib {
 		~ImportedLib();
 
 		const std::string& name() const { return m_name; }
-		const std::set<std::string>& headers() { return m_headers; }
-		const std::set<std::string>& includeDirs() { return m_includeDirs; }
-		const std::vector<std::string>& libFiles() { return m_libraryFileNames; }
+		const std::string& generatedDirname() const { return m_generatedDepDirname; }
+		const std::string& gitRepoToClone() const { return m_gitRepoToClone; }
+		const std::set<std::string>& headers() const { return m_headers; }
+		const std::set<std::string>& includeDirs() const { return m_includeDirs; }
+		const std::vector<std::string>& libFiles() const { return m_libraryFileNames; }
 
 		inline bool hasHeaders() const { return !m_headers.empty(); }
 		inline bool hasIncludeDirs() const { return !m_includeDirs.empty(); }
