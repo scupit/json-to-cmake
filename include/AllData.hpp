@@ -16,6 +16,7 @@ class AllData {
 		void loadOutputs(JsonValue&);
 		void loadGroups(JsonValue&);
 		void loadImportedLibs(JsonValue&);
+		void validateLoadedItems();
 
 	public:
 		AllData(const char*);
@@ -24,6 +25,8 @@ class AllData {
 		inline std::vector<OutputItem>& outputs() { return m_outputs; }
 		inline std::vector<OutputGroup>& outputGroups() { return m_outputGroups; }
 		inline std::vector<ImportedLib>& importedLibs() { return m_importedLibs; }
+
+		bool anyOutputsDefined();
 };
 
 #endif

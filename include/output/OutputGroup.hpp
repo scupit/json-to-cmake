@@ -19,7 +19,7 @@ class OutputGroup : public OutputBase{
 		OutputGroup(const std::string&, JsonValue&);
 		~OutputGroup();
 
-		inline std::vector<OutputItem>& outputs() { return m_outputs; }
+		inline const std::vector<OutputItem>& outputs() const { return m_outputs; }
 
 		std::string getPrefixedName() const;
 		bool hasLibraryThatCanBeToggled() const;

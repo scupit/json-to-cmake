@@ -1,6 +1,8 @@
 #include "AllData.hpp"
 
+#include <functional>
 #include <stdexcept>
+#include <unordered_set>
 #include "JSON/JsonParser.hpp"
 #include "JSON/JsonValue.hpp"
 #include "helpers/FileHelper.hpp"
@@ -22,6 +24,7 @@ AllData::AllData(const char* projectRoot)
     loadOutputs(jsonData);
     loadGroups(jsonData);
     loadImportedLibs(jsonData);
+    validateLoadedItems();
   }
   catch (std::runtime_error& e) {
     logErrorThenQuit(jsonFilePath + " does not exist.");
@@ -69,4 +72,41 @@ void AllData::loadImportedLibs(JsonValue& jsonData) {
       }
     }
   }
+}
+
+void AllData::validateLoadedItems() {
+  if (!anyOutputsDefined()) {
+    throw std::runtime_error(std::string("Must define at least one ") + Tags::OUTPUT + " or " + Tags::OUTPUT_GROUPS);
+  }
+
+  std::unordered_set<std::string> itemNames;
+
+  for (const OutputItem& output : m_outputs) {
+    itemNames.insert(output.name());
+  }
+
+  auto checkName = [&itemNames](auto& itemToCheck, const std::string& errorMessage) -> void {
+    if (itemNames.find(itemToCheck.name()) == itemNames.end()) {
+      itemNames.insert(itemToCheck.name());
+    }
+    else {
+      throw std::runtime_error(errorMessage);
+    }
+  };
+
+  for (const OutputGroup& group : m_outputGroups) {
+    checkName(group, "Group name " + group.name() + " collides with an output name.");
+
+    for (const OutputItem& output : group.outputs()) {
+      checkName(output, "Output \"" + output.name() + "\" in group " + group.name() + " has a colliding name.");
+    }
+  }
+
+  for (const ImportedLib& lib : m_importedLibs) {
+    checkName(lib, "Imported library " + lib.name() + "has a colliding name.");
+  }
+}
+
+bool AllData::anyOutputsDefined() {
+  return !(m_outputs.empty() && m_outputGroups.empty());
 }
