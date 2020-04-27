@@ -17,7 +17,7 @@ std::string getRepoName(std::string gitRepo) {
   size_t lastDirSeparator = gitRepo.rfind("/");
   return lastDirSeparator == std::string::npos
     ? gitRepo
-    : gitRepo.substr(0, gitRepo.size() - (gitRepo.size() - lastDirSeparator));
+    : gitRepo.substr(lastDirSeparator + 1, gitRepo.size() - lastDirSeparator - 1);
 }
 
 void cloneRepoIfNonexistent(const std::string& unmodifiedRepoName, const std::string& importedLibName) {
@@ -27,13 +27,13 @@ void cloneRepoIfNonexistent(const std::string& unmodifiedRepoName, const std::st
     importedLibName
   }));
 
-  const std::string repoPath = FileHelper::resolveFromRoot(Globals::EXTERNAL_GIT_REPO_DIR + '/' + getRepoName(unmodifiedRepoName));
+  const std::string repoPath = std::string(Globals::EXTERNAL_GIT_REPO_DIR) + "/" + getRepoName(unmodifiedRepoName);
 
-  if (!FileHelper::isDir(repoPath)) {
-    const char* cloneCommand = std::string("git clone " + unmodifiedRepoName + ' ' + repoPath).c_str();
+  if (!FileHelper::isDir(FileHelper::resolveFromRoot(repoPath))) {
+    const std::string cloneCommand("git clone " + unmodifiedRepoName + ' ' + FileHelper::resolveFromRoot(repoPath));
 
     FileHelper::createRelativeToRoot(repoPath);
     std::cout << "Cloning " << getRepoName(unmodifiedRepoName) << std::endl;
-    std::system(cloneCommand);
+    std::system(cloneCommand.c_str());
   }
 }

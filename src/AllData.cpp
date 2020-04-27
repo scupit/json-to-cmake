@@ -12,12 +12,12 @@
 #include "Logger.hpp"
 #include <iostream>
 
-AllData::AllData(const char* projectRoot)
+AllData::AllData()
   : m_outputs(std::vector<OutputItem>()),
     m_outputGroups(std::vector<OutputGroup>())
 {
 
-  const std::string jsonFilePath = FileHelper::resolve(std::string(projectRoot), Globals::JSON_FILE_NAME);
+  const std::string jsonFilePath = FileHelper::resolveFromRoot(Globals::JSON_FILE_NAME);
 
   try {
     JsonValue jsonData = JsonParser(jsonFilePath).getJsonCopy();
@@ -27,7 +27,7 @@ AllData::AllData(const char* projectRoot)
     validateLoadedItems();
   }
   catch (std::runtime_error& e) {
-    logErrorThenQuit(jsonFilePath + " does not exist.");
+    logErrorThenQuit(e.what());
   }
 }
 
@@ -94,10 +94,10 @@ void AllData::validateLoadedItems() {
     }
   };
 
-  for (const OutputGroup& group : m_outputGroups) {
+  for (OutputGroup& group : m_outputGroups) {
     checkName(group, "Group name " + group.name() + " collides with an output name.");
 
-    for (const OutputItem& output : group.outputs()) {
+    for (OutputItem& output : group.outputs()) {
       checkName(output, "Output \"" + output.name() + "\" in group " + group.name() + " has a colliding name.");
     }
   }

@@ -79,6 +79,7 @@ set( gen-cmake_HEADERS
 	${PROJECT_SOURCE_DIR}/include/constants/Globals.hpp
 	${PROJECT_SOURCE_DIR}/include/constants/Tags.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/FileHelper.hpp
+	${PROJECT_SOURCE_DIR}/include/helpers/GitHelper.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/StringHelper.hpp
 	${PROJECT_SOURCE_DIR}/include/output/OutputBase.hpp
 	${PROJECT_SOURCE_DIR}/include/output/OutputGroup.hpp
@@ -93,6 +94,7 @@ set( gen-cmake_SOURCES
 	${PROJECT_SOURCE_DIR}/src/ImportedLib.cpp
 	${PROJECT_SOURCE_DIR}/src/Logger.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/FileHelper.cpp
+	${PROJECT_SOURCE_DIR}/src/helpers/GitHelper.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/StringHelper.cpp
 	${PROJECT_SOURCE_DIR}/src/output/OutputBase.cpp
 	${PROJECT_SOURCE_DIR}/src/output/OutputGroup.cpp

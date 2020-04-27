@@ -69,15 +69,15 @@ std::vector<std::string> FileHelper::splitPath(const std::string& pathToSplit) {
 }
 
 void FileHelper::forFileInDir(const std::string& relativePath, const std::function<void(const std::filesystem::path&)>& callback) {
-  getItemsThen<std::filesystem::directory_iterator>(relativePath, callback, isFile);
+  getItemsThen<std::filesystem::directory_iterator>(relativePath, callback, isEntryFile);
 }
 
 void FileHelper::forFileInDirRecursive(const std::string& relativePath, const std::function<void(const std::filesystem::path&)>& callback) {
-  getItemsThen<std::filesystem::recursive_directory_iterator>(relativePath, callback, isFile);
+  getItemsThen<std::filesystem::recursive_directory_iterator>(relativePath, callback, isEntryFile);
 }
 
 void FileHelper::forDirRecursive(const std::string& relativePath, const std::function<void(const std::filesystem::path&)>& callback) {
-  getItemsThen<std::filesystem::recursive_directory_iterator>(relativePath, callback, isDir);
+  getItemsThen<std::filesystem::recursive_directory_iterator>(relativePath, callback, isEntryDir);
 }
 
 void FileHelper::getFilesByExtension(std::set<std::string>& fileList, const std::string& relativePath, const std::vector<std::string>& extensionsMatching, const bool shouldSearchRecursively) {
@@ -98,16 +98,10 @@ void FileHelper::getFilesByExtension(std::set<std::string>& fileList, const std:
 // HELPERS
 
 void FileHelper::createRelativeToRoot(const std::string& relativePathString) {
-  std::vector<std::string> sectionsToCreate = splitPath(projectRoot().string());
-
-  for (std::string& str : splitPath(relativePathString)) {
-    sectionsToCreate.push_back(str);
-  }
-
-  std::filesystem::create_directories(std::filesystem::path(joinPath(sectionsToCreate)));
+  std::filesystem::create_directories(std::filesystem::path(resolveFromRoot(relativePathString)));
 }
 
-bool FileHelper::isFile(const std::filesystem::directory_entry& entry) {
+bool FileHelper::isEntryFile(const std::filesystem::directory_entry& entry) {
   return entry.is_regular_file();
 }
 
@@ -115,7 +109,7 @@ bool FileHelper::isFile(const std::string& fileName) {
   return std::filesystem::is_regular_file(std::filesystem::path(fileName));
 }
 
-bool FileHelper::isDir(const std::filesystem::directory_entry& entry) {
+bool FileHelper::isEntryDir(const std::filesystem::directory_entry& entry) {
   return entry.is_directory();
 }
 

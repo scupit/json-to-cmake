@@ -19,7 +19,7 @@ class AllData {
 		void validateLoadedItems();
 
 	public:
-		AllData(const char*);
+		AllData();
 		~AllData();
 
 		inline std::vector<OutputItem>& outputs() { return m_outputs; }
