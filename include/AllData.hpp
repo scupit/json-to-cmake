@@ -2,6 +2,7 @@
 #define ALLDATA_HPP
 
 #include "JSON/JsonValue.hpp"
+#include "general-data/BuildTarget.hpp"
 #include "output/OutputItem.hpp"
 #include "output/OutputGroup.hpp"
 #include "ImportedLib.hpp"
@@ -13,9 +14,12 @@ class AllData {
 		std::vector<OutputGroup> m_outputGroups;
 		std::vector<ImportedLib> m_importedLibs;
 
+		std::vector<BuildTarget> m_buildTargets;
+
 		void loadOutputs(JsonValue&);
 		void loadGroups(JsonValue&);
 		void loadImportedLibs(JsonValue&);
+		void loadBuildTargets(JsonValue&);
 		void validateLoadedItems();
 
 	public:

@@ -14,7 +14,9 @@
 
 AllData::AllData()
   : m_outputs(std::vector<OutputItem>()),
-    m_outputGroups(std::vector<OutputGroup>())
+    m_outputGroups(std::vector<OutputGroup>()),
+    m_importedLibs(std::vector<ImportedLib>()),
+    m_buildTargets(std::vector<BuildTarget>())
 {
 
   const std::string jsonFilePath = FileHelper::resolveFromRoot(Globals::JSON_FILE_NAME);
@@ -24,6 +26,7 @@ AllData::AllData()
     loadOutputs(jsonData);
     loadGroups(jsonData);
     loadImportedLibs(jsonData);
+    loadBuildTargets(jsonData);
     validateLoadedItems();
   }
   catch (std::runtime_error& e) {
@@ -70,6 +73,14 @@ void AllData::loadImportedLibs(JsonValue& jsonData) {
       if (lib.shouldCloneRepo() && lib.hasRepoToClone()) {
         cloneRepoIfNonexistent(lib.gitRepoToClone(), lib.generatedDirname());
       }
+    }
+  }
+}
+
+void AllData::loadBuildTargets(JsonValue& jsonData) {
+  if (jsonData.hasOwnProperty(Tags::BUILD_TARGETS)) {
+    for (auto& [name, targetData] : jsonData[Tags::BUILD_TARGETS].asMap()) {
+      m_buildTargets.emplace_back(name, targetData);
     }
   }
 }
