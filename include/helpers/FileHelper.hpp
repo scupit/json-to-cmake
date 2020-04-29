@@ -34,6 +34,7 @@ namespace FileHelper {
 
 	// Helpers
 	void createRelativeToRoot(const std::string&);
+	std::string getProjectName();
 	bool isEntryFile(const std::filesystem::directory_entry&);
 	bool isFile(const std::string&);
 	bool isEntryDir(const std::filesystem::directory_entry&);

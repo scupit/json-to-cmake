@@ -101,6 +101,10 @@ void FileHelper::createRelativeToRoot(const std::string& relativePathString) {
   std::filesystem::create_directories(std::filesystem::path(resolveFromRoot(relativePathString)));
 }
 
+std::string FileHelper::getProjectName() {
+  return projectRoot().filename().string();
+}
+
 bool FileHelper::isEntryFile(const std::filesystem::directory_entry& entry) {
   return entry.is_regular_file();
 }
