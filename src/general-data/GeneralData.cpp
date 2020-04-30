@@ -12,11 +12,11 @@ GeneralData::GeneralData(JsonValue& jsonData, std::vector<BuildTarget>& buildTar
     supportedCStandards(std::vector<std::string>())
 {
   loadProjectName(jsonData);
+  loadStandards(jsonData);
+  loadDefaultBuildTarget(jsonData, buildTargets);
 }
 
-GeneralData::~GeneralData() {
-
-}
+GeneralData::~GeneralData() { }
 
 bool GeneralData::hasStandard(const std::vector<std::string>& standards, const std::string& stringSearching) {
   for (const std::string& standard : standards) {
@@ -63,7 +63,7 @@ void GeneralData::loadStandards(JsonValue& jsonData) {
 void GeneralData::loadDefaultStandards(JsonValue& jsonData, const bool cStandardsDefinedByUser, const bool cppStandardsDefinedByUser) {
   if (jsonData.hasOwnProperty(Tags::DEFAULT_C_STANDARD)) {
     if (!cStandardsDefinedByUser) {
-      supportedCStandards.push_back(jsonData[Tags::DEFAULT_C_STANDARD].asString());
+      supportedCStandards[0] = jsonData[Tags::DEFAULT_C_STANDARD].asString();
     }
 
     if (hasStandard(supportedCStandards, jsonData[Tags::DEFAULT_C_STANDARD].asString())) {
@@ -79,7 +79,7 @@ void GeneralData::loadDefaultStandards(JsonValue& jsonData, const bool cStandard
 
   if (jsonData.hasOwnProperty(Tags::DEFAULT_CPP_STANDARD)) {
     if (!cppStandardsDefinedByUser) {
-      supportedCppStandards.push_back(jsonData[Tags::DEFAULT_CPP_STANDARD].asString());
+      supportedCppStandards[0]= jsonData[Tags::DEFAULT_CPP_STANDARD].asString();
     }
 
     if (hasStandard(supportedCppStandards, jsonData[Tags::DEFAULT_CPP_STANDARD].asString())) {

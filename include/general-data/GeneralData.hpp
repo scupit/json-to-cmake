@@ -19,6 +19,7 @@ class GeneralData {
 
 		BuildTarget* defaultBuildTarget;	
 
+		GeneralData() = default;
 		GeneralData(JsonValue&, std::vector<BuildTarget>&);
 		~GeneralData();
 

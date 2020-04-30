@@ -18,20 +18,15 @@ AllData::AllData()
     m_importedLibs(std::vector<ImportedLib>()),
     m_buildTargets(std::vector<BuildTarget>())
 {
-
   const std::string jsonFilePath = FileHelper::resolveFromRoot(Globals::JSON_FILE_NAME);
 
-  try {
-    JsonValue jsonData = JsonParser(jsonFilePath).getJsonCopy();
-    loadOutputs(jsonData);
-    loadGroups(jsonData);
-    loadImportedLibs(jsonData);
-    loadBuildTargets(jsonData);
-    validateLoadedItems();
-  }
-  catch (std::runtime_error& e) {
-    logErrorThenQuit(e.what());
-  }
+  JsonValue jsonData = JsonParser(jsonFilePath).getJsonCopy();
+  loadOutputs(jsonData);
+  loadGroups(jsonData);
+  loadImportedLibs(jsonData);
+  loadBuildTargets(jsonData);
+  m_generalData = GeneralData(jsonData, m_buildTargets);
+  validateLoadedItems();
 }
 
 AllData::~AllData() { }

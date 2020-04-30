@@ -3,6 +3,7 @@
 
 #include "JSON/JsonValue.hpp"
 #include "general-data/BuildTarget.hpp"
+#include "general-data/GeneralData.hpp"
 #include "output/OutputItem.hpp"
 #include "output/OutputGroup.hpp"
 #include "ImportedLib.hpp"
@@ -15,6 +16,7 @@ class AllData {
 		std::vector<ImportedLib> m_importedLibs;
 
 		std::vector<BuildTarget> m_buildTargets;
+		GeneralData m_generalData;
 
 		void loadOutputs(JsonValue&);
 		void loadGroups(JsonValue&);
@@ -26,9 +28,11 @@ class AllData {
 		AllData();
 		~AllData();
 
-		inline std::vector<OutputItem>& outputs() { return m_outputs; }
-		inline std::vector<OutputGroup>& outputGroups() { return m_outputGroups; }
-		inline std::vector<ImportedLib>& importedLibs() { return m_importedLibs; }
+		std::vector<OutputItem>& outputs() { return m_outputs; }
+		std::vector<OutputGroup>& outputGroups() { return m_outputGroups; }
+		std::vector<ImportedLib>& importedLibs() { return m_importedLibs; }
+		std::vector<BuildTarget>& buildTargets() { return m_buildTargets; }
+		GeneralData& generalData() { return m_generalData; }
 
 		bool anyOutputsDefined();
 };
