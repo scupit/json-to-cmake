@@ -25,6 +25,7 @@ class OutputItem : public OutputBase {
 		~OutputItem();
 
 		inline bool isContainedInGroup() const { return groupContainedIn != nullptr; }
+		const OutputGroup* containingGroup() const { return groupContainedIn; }
 
 		bool parentGroupHasHeaders() const;
 		bool parentGroupHasIncludeDirs() const;

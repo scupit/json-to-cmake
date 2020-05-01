@@ -9,6 +9,7 @@
 #include "helpers/GitHelper.hpp"
 #include "constants/Globals.hpp"
 #include "constants/Tags.hpp"
+#include "Linker.hpp"
 #include "Logger.hpp"
 #include <iostream>
 
@@ -27,6 +28,10 @@ AllData::AllData()
   loadBuildTargets(jsonData);
   m_generalData = GeneralData(jsonData, m_buildTargets);
   validateLoadedItems();
+
+  if (jsonData.hasOwnProperty(Tags::LINKS)) {
+    linkLibrariesToOutputs(jsonData[Tags::LINKS].asMap(), m_outputGroups, m_outputs, m_importedLibs);
+  }
 }
 
 AllData::~AllData() { }

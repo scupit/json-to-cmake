@@ -49,7 +49,7 @@ void OutputBase::loadCanToggleType(JsonValue& outputItemData) {
 }
 
 bool OutputBase::hasLinkedLibs() const {
-  return !(linkedGroups.empty() || linkedImportedLibs.empty() || linkedOutputs.empty());
+  return !(linkedGroups.empty() && linkedImportedLibs.empty() && linkedOutputs.empty());
 }
 
 bool OutputBase::hasOrInheritsHeaders() const {

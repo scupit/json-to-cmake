@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-void linkLibrariesToOutputs(JsonValue&, std::vector<OutputGroup>&, std::vector<OutputItem>&, std::vector<ImportedLib>&);
+void linkLibrariesToOutputs(JsonObject&, std::vector<OutputGroup>&, std::vector<OutputItem>&, std::vector<ImportedLib>&);
 void linkToOutput(const std::vector<std::string>&, std::vector<OutputGroup>&, std::vector<OutputItem>&, std::vector<ImportedLib>&, OutputBase&, const std::string&, const std::string&);
 OutputGroup* getOutputGroupByName(std::vector<OutputGroup>&, const std::string&);
 OutputItem* getOutputItemByName(std::vector<OutputGroup>&, std::vector<OutputItem>&, const std::string&);

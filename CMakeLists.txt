@@ -66,6 +66,74 @@ find_library( JSON_0
 )
 
 # ////////////////////////////////////////////////////////////////////////////////
+# EXECUTABLE OUTPUT GROUPS 
+# ////////////////////////////////////////////////////////////////////////////////
+
+# Output Group g_testing
+set( g_testing_HEADERS
+	${JSON_HEADERS}
+	${PROJECT_SOURCE_DIR}/include/AllData.hpp
+	${PROJECT_SOURCE_DIR}/include/FileRetriever.hpp
+	${PROJECT_SOURCE_DIR}/include/ImportedLib.hpp
+	${PROJECT_SOURCE_DIR}/include/Linker.hpp
+	${PROJECT_SOURCE_DIR}/include/Logger.hpp
+	${PROJECT_SOURCE_DIR}/include/constants/Globals.hpp
+	${PROJECT_SOURCE_DIR}/include/constants/Tags.hpp
+	${PROJECT_SOURCE_DIR}/include/general-data/BuildTarget.hpp
+	${PROJECT_SOURCE_DIR}/include/general-data/GeneralData.hpp
+	${PROJECT_SOURCE_DIR}/include/helpers/FileHelper.hpp
+	${PROJECT_SOURCE_DIR}/include/helpers/GitHelper.hpp
+	${PROJECT_SOURCE_DIR}/include/helpers/StringHelper.hpp
+	${PROJECT_SOURCE_DIR}/include/output/OutputBase.hpp
+	${PROJECT_SOURCE_DIR}/include/output/OutputGroup.hpp
+	${PROJECT_SOURCE_DIR}/include/output/OutputItem.hpp
+)
+
+set( g_testing_SOURCES
+	${g_testing_HEADERS}
+	${PROJECT_SOURCE_DIR}/src/AllData.cpp
+	${PROJECT_SOURCE_DIR}/src/FileRetriever.cpp
+	${PROJECT_SOURCE_DIR}/src/ImportedLib.cpp
+	${PROJECT_SOURCE_DIR}/src/Linker.cpp
+	${PROJECT_SOURCE_DIR}/src/Logger.cpp
+	${PROJECT_SOURCE_DIR}/src/general-data/BuildTarget.cpp
+	${PROJECT_SOURCE_DIR}/src/general-data/GeneralData.cpp
+	${PROJECT_SOURCE_DIR}/src/helpers/FileHelper.cpp
+	${PROJECT_SOURCE_DIR}/src/helpers/GitHelper.cpp
+	${PROJECT_SOURCE_DIR}/src/helpers/StringHelper.cpp
+	${PROJECT_SOURCE_DIR}/src/output/OutputBase.cpp
+	${PROJECT_SOURCE_DIR}/src/output/OutputGroup.cpp
+	${PROJECT_SOURCE_DIR}/src/output/OutputItem.cpp
+)
+
+set( g_testing_INCLUDE_DIRS
+	${JSON_INCLUDE_DIRS}
+	${PROJECT_SOURCE_DIR}/include
+)
+
+# Output executable: visualize-links
+set( visualize-links_HEADERS
+	${g_testing_HEADERS}
+)
+
+set( visualize-links_SOURCES
+	${visualize-links_HEADERS}
+	${g_testing_SOURCES}
+	${PROJECT_SOURCE_DIR}/visualize-link-tree-main.cpp
+)
+
+set( visualize-links_INCLUDE_DIRS
+	${g_testing_INCLUDE_DIRS}
+)
+
+add_executable( visualize-links ${visualize-links_SOURCES} )
+target_include_directories( visualize-links PRIVATE ${visualize-links_INCLUDE_DIRS} )
+
+set_target_properties( visualize-links PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}
+)
+
+# ////////////////////////////////////////////////////////////////////////////////
 # OUTPUT EXECUTABLES 
 # ////////////////////////////////////////////////////////////////////////////////
 
@@ -75,6 +143,7 @@ set( gen-cmake_HEADERS
 	${PROJECT_SOURCE_DIR}/include/AllData.hpp
 	${PROJECT_SOURCE_DIR}/include/FileRetriever.hpp
 	${PROJECT_SOURCE_DIR}/include/ImportedLib.hpp
+	${PROJECT_SOURCE_DIR}/include/Linker.hpp
 	${PROJECT_SOURCE_DIR}/include/Logger.hpp
 	${PROJECT_SOURCE_DIR}/include/constants/Globals.hpp
 	${PROJECT_SOURCE_DIR}/include/constants/Tags.hpp
@@ -94,6 +163,7 @@ set( gen-cmake_SOURCES
 	${PROJECT_SOURCE_DIR}/src/AllData.cpp
 	${PROJECT_SOURCE_DIR}/src/FileRetriever.cpp
 	${PROJECT_SOURCE_DIR}/src/ImportedLib.cpp
+	${PROJECT_SOURCE_DIR}/src/Linker.cpp
 	${PROJECT_SOURCE_DIR}/src/Logger.cpp
 	${PROJECT_SOURCE_DIR}/src/general-data/BuildTarget.cpp
 	${PROJECT_SOURCE_DIR}/src/general-data/GeneralData.cpp
@@ -121,6 +191,10 @@ set_target_properties( gen-cmake PROPERTIES
 # LINK LIBRARIES TO OUTPUTS
 # ////////////////////////////////////////////////////////////////////////////////
 
+target_link_libraries( visualize-links
+	${JSON_0}
+)
+
 target_link_libraries( gen-cmake
 	${JSON_0}
 )
@@ -131,6 +205,13 @@ target_link_libraries( gen-cmake
 
 # Copy libaries imported by JSON to executable output dir
 add_custom_command(TARGET gen-cmake POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+		${PROJECT_SOURCE_DIR}/dep/lib/JSON
+		${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}
+)
+
+# Copy libaries imported by JSON to executable output dir
+add_custom_command(TARGET visualize-links POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
 		${PROJECT_SOURCE_DIR}/dep/lib/JSON
 		${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}

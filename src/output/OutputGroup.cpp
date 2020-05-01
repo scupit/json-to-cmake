@@ -67,7 +67,7 @@ bool OutputGroup::hasLibraryThatCanBeToggled() const {
     return false;
 
   for (const OutputItem& output : m_outputs) {
-    if (output.canToggleLIbraryType()) {
+    if (output.canToggleLibraryType()) {
       return true;
     }
   } 

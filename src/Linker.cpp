@@ -4,12 +4,12 @@
 #include "helpers/StringHelper.hpp"
 
 void linkLibrariesToOutputs(
-    JsonValue& linkData,
+    JsonObject& linkData,
     std::vector<OutputGroup>& outputGroups,
     std::vector<OutputItem>& outputItems,
     std::vector<ImportedLib>& importedLibs) {
 
-  for (auto& [nameLinkingTo, jsonNamesLinkingTo] : linkData.asMap()) {
+  for (auto& [nameLinkingTo, jsonNamesLinkingTo] : linkData) {
     OutputItem* outputLinkingTo = getOutputItemByName(outputGroups, outputItems, nameLinkingTo);
     OutputGroup* groupLinkingTo = getOutputGroupByName(outputGroups, nameLinkingTo);
 
@@ -22,7 +22,7 @@ void linkLibrariesToOutputs(
       linkToOutput(linkedLibNames, outputGroups, outputItems, importedLibs, *outputLinkingTo, nameLinkingTo, "output library");
     }
     else if (groupLinkingTo) {
-      linkToOutput(linkedLibNames, outputGroups, outputItems, importedLibs, *outputLinkingTo, nameLinkingTo, "output library group");
+      linkToOutput(linkedLibNames, outputGroups, outputItems, importedLibs, *groupLinkingTo, nameLinkingTo, "output library group");
     }
     else {
       logErrorThenQuit(std::string("Tried linking to output or group \"") + nameLinkingTo + "\" which does not exist.");
@@ -88,7 +88,7 @@ OutputGroup* getOutputGroupByName(std::vector<OutputGroup>& outputGroups, const 
 
 OutputItem* getOutputItemByName(std::vector<OutputGroup>& outputGroups, std::vector<OutputItem>& outputItems, const std::string& outputNameSearching) {
 
-  if (outputNameSearching.find(".") == std::string::npos) {
+  if (outputNameSearching.find(".") != std::string::npos) {
     std::vector<std::string> nameSections = StringHelper::split(outputNameSearching, ".");
     const std::string
       &groupName = nameSections[0],

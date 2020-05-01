@@ -11,6 +11,8 @@ int main(int argc, const char** argv) {
   try {
     AllData data;
     cout << data.generalData().defaultBuildTarget->name() << endl;
+
+    // TODO: Write data to CMakeLists.txt
   }
   catch (std::runtime_error& e) {
     cout << e.what();

@@ -11,6 +11,20 @@
         }
     },
 
+    "outputGroups": {
+        "testing": {
+            "type": "executable",
+            "rSourceDirs": [ "src" ],
+            "rHeaderDirs": [ "include" ],
+            "includeDirs": [ "include" ],
+            "outputs": {
+                "visualize-links": {
+                    "mainFile": "visualize-link-tree-main.cpp"
+                }
+            }
+        }
+    },
+
     "importedLibs": {
         "JSON": {
             "gitRepo": "https://github.com/scupit/JSON-in-cpp.git",
@@ -26,6 +40,9 @@
 
     "links": {
         "gen-cmake": [
+            "JSON"
+        ],
+        "testing": [
             "JSON"
         ]
     },

@@ -49,7 +49,11 @@ class OutputBase {
 		inline const std::set<std::string>& sources() const { return m_sources; }
 		inline const std::set<std::string>& includeDirs() const { return m_includeDirs; }
 
-		inline bool canToggleLIbraryType() const { return m_canToggleLibraryType; }
+		const std::vector<OutputItem*>& localLinkedOutputs() const { return linkedOutputs; }
+		const std::vector<OutputGroup*>& localLinkedGroups() const { return linkedGroups; }
+		const std::vector<ImportedLib*>& localLinkedImports() const { return linkedImportedLibs; }
+
+		inline bool canToggleLibraryType() const { return m_canToggleLibraryType; }
 		inline bool isExeType() const { return m_type == OutputType::EXE; }
 		inline bool isSharedLibType() const { return m_type == OutputType::SHARED_LIB; }
 		inline bool isStaticLibType() const { return m_type == OutputType::STATIC_LIB; }
