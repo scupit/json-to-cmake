@@ -119,7 +119,7 @@ set( visualize-links_HEADERS
 set( visualize-links_SOURCES
 	${visualize-links_HEADERS}
 	${g_testing_SOURCES}
-	${PROJECT_SOURCE_DIR}/visualize-link-tree-main.cpp
+	${PROJECT_SOURCE_DIR}/tests/visualize-link-tree-main.cpp
 )
 
 set( visualize-links_INCLUDE_DIRS

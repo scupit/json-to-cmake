@@ -29,9 +29,9 @@ int main(int argc, const char** argv) {
       for (OutputItem& item : group.outputs()) {
         cout << "|\n\\----> " << group.name() << '.' << item.name() << ':' << endl;
         if (group.hasLinkedLibs()) {
-          cout << "|\t(inherits from group)" << endl;
+          cout << "|\t\t(inherits from group)" << endl;
         }
-        visualizeLinkTree(item, 1, "|");
+        visualizeLinkTree(item, 2, "|");
       }
       cout << endl;
     }

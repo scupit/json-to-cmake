@@ -19,7 +19,7 @@
             "includeDirs": [ "include" ],
             "outputs": {
                 "visualize-links": {
-                    "mainFile": "visualize-link-tree-main.cpp"
+                    "mainFile": "tests/visualize-link-tree-main.cpp"
                 }
             }
         }
