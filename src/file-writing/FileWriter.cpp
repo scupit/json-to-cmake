@@ -1,4 +1,5 @@
 #include "file-writing/FileWriter.hpp"
+#include "file-writing/CmakeCustomFunctions.hpp"
 
 FileWriter::FileWriter(AllData& projectData, const std::string& fileNameWriting)
   : cmakeLists(std::ofstream(fileNameWriting)),
@@ -43,10 +44,29 @@ void FileWriter::newlines(const unsigned int numNewlines) {
 
 // PROJECT WRITE FUNCTIONS
 
-// void writeWatermark();
-// void writeCmakeVersion();
-// void writeProjectName();
-// void writeCustomCmakeFunctions();
+void FileWriter::writeWatermark() {
+  cmakeLists << "################################################################################" << std::endl
+             << "# Generated with Skylar Cupit's json-to-cmake tool" << std::endl
+             << "################################################################################";
+  newlines(2);
+}
+
+void FileWriter::writeCmakeVersion() {
+  cmakeLists << "cmake_minimum_required( VERSION " << data->generalData().cmakeVersion << std::endl
+             << "                        LANGUAGES C CXX )";
+}
+
+void FileWriter::writeProjectName() {
+  cmakeLists << "project( " << data->generalData().projectName << " )";
+}
+
+void FileWriter::writeCustomCmakeFunctions() {
+  if (data->hasLibraryThatCanBeToggled()) {
+    headerComment("Custom Functions");
+    cmakeLists << CmakeCustomFunctions::TOGGLEABLE_LIBRARY_CREATOR << std::endl;
+  }
+}
+
 // void writeImportedLibs();
 
 // void writeStandards();

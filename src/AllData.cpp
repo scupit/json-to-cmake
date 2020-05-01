@@ -118,6 +118,21 @@ void AllData::validateLoadedItems() {
   }
 }
 
+bool AllData::hasLibraryThatCanBeToggled() {
+  for (OutputGroup& group : m_outputGroups) {
+    if (group.hasLibraryThatCanBeToggled()) {
+      return true;
+    }
+  }
+
+  for (OutputItem& output : m_outputs) {
+    if (output.canToggleLibraryType()) {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool AllData::anyOutputsDefined() {
   return !(m_outputs.empty() && m_outputGroups.empty());
 }
