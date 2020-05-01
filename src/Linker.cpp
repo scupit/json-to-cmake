@@ -1,9 +1,79 @@
 #include "Linker.hpp"
 
+#include "Logger.hpp"
 #include "helpers/StringHelper.hpp"
 
-// void linkLibrariesToOutputs(JsonValue&, std::vector<OutputGroup>&, std::vector<OutputItem>&, std::vector<ImportedLib>&);
-// void linkToOutput(const std::vector<std::string>&, std::vector<OutputGroup>&, std::vector<OutputItem>&, std::vector<ImportedLib>&, OutputBase&, const std::string&, const std::string&);
+void linkLibrariesToOutputs(
+    JsonValue& linkData,
+    std::vector<OutputGroup>& outputGroups,
+    std::vector<OutputItem>& outputItems,
+    std::vector<ImportedLib>& importedLibs) {
+
+  for (auto& [nameLinkingTo, jsonNamesLinkingTo] : linkData.asMap()) {
+    OutputItem* outputLinkingTo = getOutputItemByName(outputGroups, outputItems, nameLinkingTo);
+    OutputGroup* groupLinkingTo = getOutputGroupByName(outputGroups, nameLinkingTo);
+
+    std::vector<std::string> linkedLibNames;
+    for (JsonValue& jsonName : jsonNamesLinkingTo.asVector()) {
+      linkedLibNames.push_back(jsonName.asString());
+    }
+
+    if (outputLinkingTo) {
+      linkToOutput(linkedLibNames, outputGroups, outputItems, importedLibs, *outputLinkingTo, nameLinkingTo, "output library");
+    }
+    else if (groupLinkingTo) {
+      linkToOutput(linkedLibNames, outputGroups, outputItems, importedLibs, *outputLinkingTo, nameLinkingTo, "output library group");
+    }
+    else {
+      logErrorThenQuit(std::string("Tried linking to output or group \"") + nameLinkingTo + "\" which does not exist.");
+    }
+  }
+}
+
+void linkToOutput(
+    const std::vector<std::string>& namesLinking,
+    std::vector<OutputGroup>& outputGroups,
+    std::vector<OutputItem>& outputItems,
+    std::vector<ImportedLib>& importedLibs,
+    OutputBase& outputLinkingTo,
+    const std::string& fullNameLinkingTo,
+    const std::string& itemTypeString) {
+
+  for (const std::string& linkedLibName : namesLinking) {
+    OutputItem* outputLinkingFrom = getOutputItemByName(outputGroups, outputItems, linkedLibName);
+    OutputGroup* groupLinkingFrom = getOutputGroupByName(outputGroups, linkedLibName);
+    ImportedLib* importedLibLinkingFrom = getImportedLibByName(importedLibs, linkedLibName);
+
+    if (outputLinkingFrom) {
+      if (outputLinkingFrom->isExeType()) {
+        logErrorThenQuit("Cannot link executable output " + linkedLibName + " to " + fullNameLinkingTo);
+      }
+      else if (outputLinkingTo.isLibraryType()) {
+        logErrorThenQuit("Please don't link output library \"" + linkedLibName + "\" to another " + itemTypeString + " (" + linkedLibName + ")");
+      }
+      else {
+        outputLinkingTo.linkLib(outputLinkingFrom);
+      }
+    }
+    else if (groupLinkingFrom) {
+      if (groupLinkingFrom->isExeType()) {
+        logErrorThenQuit("Cannot link exe type group " + linkedLibName + " to " + fullNameLinkingTo);
+      }
+      else if (outputLinkingTo.isLibraryType()) {
+        logErrorThenQuit("Please don't link output type library group \"" + linkedLibName + "\" to another " + itemTypeString + " (" + fullNameLinkingTo + ")");
+      }
+      else {
+        outputLinkingTo.linkGroup(groupLinkingFrom);
+      }
+    }
+    else if (importedLibLinkingFrom) {
+      outputLinkingTo.linkLib(importedLibLinkingFrom);
+    }
+    else {
+      logErrorThenQuit("Cannot link nonexistend library or group \"" + linkedLibName + "\" to " + fullNameLinkingTo);
+    }
+  }
+}
 
 OutputGroup* getOutputGroupByName(std::vector<OutputGroup>& outputGroups, const std::string& groupNameSearching) {
   if (groupNameSearching.find(".") == std::string::npos) {
