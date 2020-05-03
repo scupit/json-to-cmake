@@ -102,7 +102,8 @@ void FileHelper::createRelativeToRoot(const std::string& relativePathString) {
 }
 
 std::string FileHelper::getProjectName() {
-  return projectRoot().filename().string();
+  const std::vector<std::string> thePath = splitPath(projectRoot().string());
+  return thePath[thePath.size() - 1];
 }
 
 bool FileHelper::isEntryFile(const std::filesystem::directory_entry& entry) {
