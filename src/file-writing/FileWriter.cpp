@@ -415,9 +415,43 @@ void FileWriter::writeGeneralGroupData(OutputGroup& group) {
   }
 }
 
-// void writeLibraryGroup(OutputGroup&);
-// void writeExeGroup(OutputGroup&);
-// void writeOutputGroups();
+void FileWriter::writeLibraryGroup(OutputGroup& libraryGroup) {
+  writeGeneralGroupData(libraryGroup);
+  newlines(2);
+
+  for (OutputItem& output : libraryGroup.outputs()) {
+    writeLibOutput(output, libraryGroup.isStaticLibType() ? "STATIC" : "SHARED");
+  }
+}
+
+void FileWriter::writeExeGroup(OutputGroup& exeGroup) {
+  writeGeneralGroupData(exeGroup);
+  newlines(2); 
+
+  for (OutputItem& output : exeGroup.outputs()) {
+    writeExe(output);
+  }
+}
+
+void FileWriter::writeOutputGroups() {
+  if (data->hasLibOutputGroups()) {
+    headerComment("LIBRARY OUTPUT GROUPS");
+    for (OutputGroup& group : data->outputGroups()) {
+      if (group.isLibraryType()) {
+        writeLibraryGroup(group);
+      }
+    }
+  } 
+
+  if (data->hasExeOutputGroups()) {
+    headerComment("EXECUTABLE OUTPUT GROUPS");
+    for (OutputGroup& group : data->outputGroups()) {
+      if (group.isExeType()) {
+        writeExeGroup(group);
+      }
+    }
+  }
+}
 
 // void writeLinksForItem(const std::string&, const std::vector<OutputItem*>, const std::vector<ImportedLib*>&);
 // void writeLinks();

@@ -145,6 +145,24 @@ bool AllData::hasLibraryThatCanBeToggled() {
   return false;
 }
 
+bool AllData::hasLibOutputGroups() {
+  for (OutputGroup& group : m_outputGroups) {
+    if (group.isLibraryType()) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool AllData::hasExeOutputGroups() {
+  for (OutputGroup& group : m_outputGroups) {
+    if (group.isExeType()) {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool AllData::anyOutputsDefined() {
   return !(m_outputs.empty() && m_outputGroups.empty());
 }

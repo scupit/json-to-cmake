@@ -35,8 +35,9 @@ class AllData {
 		GeneralData& generalData() { return m_generalData; }
 
 		bool hasIndividualOutputsOfType(OutputType);
-
 		bool hasLibraryThatCanBeToggled();
+		bool hasLibOutputGroups();
+		bool hasExeOutputGroups();
 		bool anyOutputsDefined();
 };
 
