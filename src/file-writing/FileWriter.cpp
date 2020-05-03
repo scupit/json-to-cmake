@@ -134,7 +134,56 @@ void FileWriter::writeStandards() {
     << "\nset( CMAKE_CXX_EXTENSIONS OFF )";
 }
 
-// void writeBuildTargets();
+void FileWriter::writeBuildTargets() {
+  headerComment("BUILD TARGETS");
+
+  // Build Targets dropdown
+  cmakeLists << "set_property( CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ";
+  for (BuildTarget& target : data->buildTargets()) {
+    cmakeLists << inQuotes(target.name()) << ' '; 
+  }
+  cmakeLists << ')';
+
+  // Default build target
+  cmakeLists << "if( NOT " CMAKE_BUILD_CONFIG " )"
+    << "\n\tset( CMAKE_BUILD_TYPE " << inQuotes(data->generalData().defaultBuildTarget->name()) << " CACHE STRING \"Project Configuration\" FORCE )"
+    << "\nendif()";
+  newlines();
+
+  size_t i = 0;
+  for (BuildTarget& target : data->buildTargets()) {
+    newlines();
+
+    cmakeLists << (i == 0 ? "if" : "elseif")
+      << "( " << inQuotes(CMAKE_BUILD_CONFIG) << " STREQUAL " << inQuotes(target.name()) << " )";
+
+    cmakeLists << "\n\tset( CMAKE_CXX_FLAGS \"";
+    for (const std::string& flag : target.compilerFlags()) {
+      cmakeLists << flag << ' ';
+    }
+    cmakeLists << "\" )";
+
+    cmakeLists << "\n\tset( CMAKE_C_FLAGS \"";
+    for (const std::string& flag : target.compilerFlags()) {
+      cmakeLists << flag << ' ';
+    }
+    cmakeLists << "\" )";
+
+    if (target.hasCompileDefinitions()) {
+      cmakeLists << "\n\tadd_compile_definitions( ";
+
+      for (const std::string& definition : target.compilerDefines()) {
+        cmakeLists << definition << ' ';
+      }
+      cmakeLists << ')';
+    }
+    ++i;
+  }
+
+  cmakeLists << "\nendif()"
+    << "\n\nmessage( \"Using compiler flags: ${CMAKE_CXX_FLAGS}\" )"
+    << "\nmessage( \"Building project '" CMAKE_BUILD_CONFIG << "' configuration\" )";
+}
 
 // void libCreationFunctionString(const OutputItem&);
 // void writeGeneralOutputData(OutputItem&);
