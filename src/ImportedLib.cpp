@@ -2,6 +2,7 @@
 
 #include "constants/Tags.hpp"
 #include "helpers/FileHelper.hpp"
+#include "FileRetriever.hpp"
 #include "Logger.hpp"
 
 ImportedLib::ImportedLib(const std::string& name, JsonValue& importedLibData)
@@ -18,6 +19,9 @@ ImportedLib::ImportedLib(const std::string& name, JsonValue& importedLibData)
   loadLibraryFiles(importedLibData);
   loadGitRepoToClone(importedLibData);
   loadGeneratedDirname(importedLibData);
+
+  FileRetriever::loadHeaderFiles(m_headers, importedLibData);
+  FileRetriever::loadIncludeDirs(m_includeDirs, importedLibData);
 }
 
 ImportedLib::~ImportedLib() { }

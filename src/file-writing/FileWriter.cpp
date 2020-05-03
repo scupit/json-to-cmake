@@ -27,7 +27,6 @@ void FileWriter::write() {
   writeCmakeVersion();
   newlines();
   writeProjectName();
-  newlines(2);
 
   writeCustomCmakeFunctions();
 
@@ -82,12 +81,11 @@ void FileWriter::writeWatermark() {
 }
 
 void FileWriter::writeCmakeVersion() {
-  cmakeLists << "cmake_minimum_required( VERSION " << data->generalData().cmakeVersion << std::endl
-             << "                        LANGUAGES C CXX )";
+  cmakeLists << "cmake_minimum_required( VERSION " << data->generalData().cmakeVersion << " )";
 }
 
 void FileWriter::writeProjectName() {
-  cmakeLists << "project( " << data->generalData().projectName << " )";
+  cmakeLists << "project( " << data->generalData().projectName << " LANGUAGES C CXX )";
 }
 
 void FileWriter::writeCustomCmakeFunctions() {
@@ -121,14 +119,15 @@ void FileWriter::writeImportedLibs() {
         cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << headerFile;
       }
       cmakeLists << "\n)";
+      newlines(2);
     }
 
     for (const std::string& libFileName : lib.libFiles()) {
-      newlines(2);
       cmakeLists << "find_library( " << mangleLibName(lib.name(), libFileName)
         << "\n\tNAMES " << libFileName
         << "\n\tPATHS " PROJECT_SOURCE_DIR "/" << lib.dirContainingLibFiles()
         << "\n)";
+      newlines(2);
     }
   }
 }
@@ -175,7 +174,7 @@ void FileWriter::writeBuildTargets() {
   cmakeLists << ')';
 
   // Default build target
-  cmakeLists << "\nif( NOT " CMAKE_BUILD_CONFIG " )"
+  cmakeLists << "\nif( " << inQuotes(CMAKE_BUILD_CONFIG) << " STREQUAL " << inQuotes("") << " )"
     << "\n\tset( CMAKE_BUILD_TYPE " << inQuotes(data->generalData().defaultBuildTarget->name()) << " CACHE STRING \"Project Configuration\" FORCE )"
     << "\nendif()";
   newlines();
@@ -287,6 +286,7 @@ void FileWriter::writeGeneralOutputData(OutputItem& output) {
     cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << sourceFile;
   }
 
+  cmakeLists << "\n)";
   newlines(2);
 
   if (output.hasOrInheritsIncludeDirs()) {
@@ -361,6 +361,7 @@ void FileWriter::writeOutputs() {
         writeLibOutput(output, "SHARED");
       }
     }
+    newlines(2);
   }
 
   if (data->hasIndividualOutputsOfType(OutputType::STATIC_LIB)) {
@@ -371,6 +372,7 @@ void FileWriter::writeOutputs() {
         writeLibOutput(output, "STATIC");
       }
     }
+    newlines(2);
   }
 
   writeOutputGroups();
@@ -382,6 +384,7 @@ void FileWriter::writeOutputs() {
         writeExe(output);
       }
     }
+    newlines(2);
   }
 }
 
@@ -407,6 +410,7 @@ void FileWriter::writeGeneralGroupData(OutputGroup& group) {
     for (const std::string& headerFile : group.headers()) {
       cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << headerFile;
     }
+    cmakeLists << "\n)";
   }
 
   newlines(2);
@@ -421,6 +425,7 @@ void FileWriter::writeGeneralGroupData(OutputGroup& group) {
     cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << sourceFile;
   }
   cmakeLists << "\n)";
+  newlines(2);
 
   // Write include dirs
   if (group.hasOrInheritsHeaders()) {
@@ -471,6 +476,7 @@ void FileWriter::writeOutputGroups() {
         writeLibraryGroup(group);
       }
     }
+    newlines(2);
   } 
 
   if (data->hasExeOutputGroups()) {
@@ -480,6 +486,7 @@ void FileWriter::writeOutputGroups() {
         writeExeGroup(group);
       }
     }
+    newlines(2);
   }
 }
 
@@ -496,6 +503,7 @@ void FileWriter::writeLinksForItem(const std::string& targetItemName, const std:
     cmakeLists << "\n\t" << linkedOutput->name();
   }
   cmakeLists << "\n)";
+  newlines(2);
 }
 
 void FileWriter::writeLinks() {
@@ -514,7 +522,7 @@ void FileWriter::writeLinks() {
           linkedImports.push_back(linkedImport);
         }
 
-        writeLinksForItem(output.name(), linkedOutputs, output.getAllLinkedImportedLibs());
+        writeLinksForItem(output.name(), linkedOutputs, linkedImports);
       }
     }
   }
@@ -548,6 +556,7 @@ void FileWriter::writeImportedLibCopyCommands() {
         << "\n\t\t" PROJECT_SOURCE_DIR "/" << importedLib.dirContainingLibFiles()
         << "\n\t\t" << getOutputDir(OutputItem::exeOutputDir)
         << "\n)";
+        newlines(2);
     }
   }
 }

@@ -2,11 +2,8 @@
 # Generated with Skylar Cupit's json-to-cmake tool
 ################################################################################
 
-cmake_minimum_required( VERSION 3.12
-                        LANGUAGES C CXX )
-project(  )
-
-
+cmake_minimum_required( VERSION 3.12 )
+project( json-to-cmake LANGUAGES C CXX )
 
 # ////////////////////////////////////////////////////////////////////////////////
 # LANGUAGE STANDARDS
@@ -31,7 +28,7 @@ set( CMAKE_CXX_EXTENSIONS OFF )
 # ////////////////////////////////////////////////////////////////////////////////
 
 set_property( CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" )
-if( NOT ${CMAKE_BUILD_TYPE} )
+if( "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 	set( CMAKE_BUILD_TYPE "Debug" CACHE STRING "Project Configuration" FORCE )
 endif()
 
@@ -52,17 +49,27 @@ message( "Building project '${CMAKE_BUILD_TYPE}' configuration" )
 # ////////////////////////////////////////////////////////////////////////////////
 
 # Imported library: JSON
+set( JSON_INCLUDE_DIRS
+	${PROJECT_SOURCE_DIR}/dep/include
+)
 
+set( JSON_HEADERS
+	${PROJECT_SOURCE_DIR}/dep/include/JSON/JsonParser.hpp
+	${PROJECT_SOURCE_DIR}/dep/include/JSON/JsonValue.hpp
+)
 
 find_library( JSON--jParser
 	NAMES jParser
 	PATHS ${PROJECT_SOURCE_DIR}/dep/lib/JSON
-)# ////////////////////////////////////////////////////////////////////////////////
+)
+
+# ////////////////////////////////////////////////////////////////////////////////
 # EXECUTABLE OUTPUT GROUPS
 # ////////////////////////////////////////////////////////////////////////////////
 
 # Output Group g_testing
 set( g_testing_HEADERS
+	${JSON_HEADERS}
 	${PROJECT_SOURCE_DIR}/include/AllData.hpp
 	${PROJECT_SOURCE_DIR}/include/FileRetriever.hpp
 	${PROJECT_SOURCE_DIR}/include/ImportedLib.hpp
@@ -81,6 +88,7 @@ set( g_testing_HEADERS
 	${PROJECT_SOURCE_DIR}/include/output/OutputBase.hpp
 	${PROJECT_SOURCE_DIR}/include/output/OutputGroup.hpp
 	${PROJECT_SOURCE_DIR}/include/output/OutputItem.hpp
+)
 
 set( g_testing_SOURCES
 	${g_testing_HEADERS}
@@ -99,7 +107,10 @@ set( g_testing_SOURCES
 	${PROJECT_SOURCE_DIR}/src/output/OutputBase.cpp
 	${PROJECT_SOURCE_DIR}/src/output/OutputGroup.cpp
 	${PROJECT_SOURCE_DIR}/src/output/OutputItem.cpp
-)set( g_testing_INCLUDE_DIRS
+)
+
+set( g_testing_INCLUDE_DIRS
+	${JSON_INCLUDE_DIRS}
 	${PROJECT_SOURCE_DIR}/include
 )
 
@@ -112,6 +123,7 @@ set( visualize-links_SOURCES
 	${visualize-links_HEADERS}
 	${g_testing_SOURCES}
 	${PROJECT_SOURCE_DIR}/tests/visualize-link-tree-main.cpp
+)
 
 set( visualize-links_INCLUDE_DIRS
 	${g_testing_INCLUDE_DIRS}
@@ -122,12 +134,15 @@ target_include_directories( visualize-links PRIVATE ${visualize-links_INCLUDE_DI
 
 set_target_properties( visualize-links PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}
-)# ////////////////////////////////////////////////////////////////////////////////
+)
+
+# ////////////////////////////////////////////////////////////////////////////////
 # INDIVIDUAL OUTPUT EXECUTABLES
 # ////////////////////////////////////////////////////////////////////////////////
 
 # Output executable: gen-cmake
 set( gen-cmake_HEADERS
+	${JSON_HEADERS}
 	${PROJECT_SOURCE_DIR}/include/AllData.hpp
 	${PROJECT_SOURCE_DIR}/include/FileRetriever.hpp
 	${PROJECT_SOURCE_DIR}/include/ImportedLib.hpp
@@ -166,8 +181,10 @@ set( gen-cmake_SOURCES
 	${PROJECT_SOURCE_DIR}/src/output/OutputBase.cpp
 	${PROJECT_SOURCE_DIR}/src/output/OutputGroup.cpp
 	${PROJECT_SOURCE_DIR}/src/output/OutputItem.cpp
+)
 
 set( gen-cmake_INCLUDE_DIRS
+	${JSON_INCLUDE_DIRS}
 	${PROJECT_SOURCE_DIR}/include
 )
 
@@ -176,14 +193,21 @@ target_include_directories( gen-cmake PRIVATE ${gen-cmake_INCLUDE_DIRS} )
 
 set_target_properties( gen-cmake PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}
-)# ////////////////////////////////////////////////////////////////////////////////
+)
+
+# ////////////////////////////////////////////////////////////////////////////////
 # LINK LIBRARIES TO OUTPUTS
 # ////////////////////////////////////////////////////////////////////////////////
 
 target_link_libraries( visualize-links
-)target_link_libraries( gen-cmake
 	${JSON--jParser}
-)# ////////////////////////////////////////////////////////////////////////////////
+)
+
+target_link_libraries( gen-cmake
+	${JSON--jParser}
+)
+
+# ////////////////////////////////////////////////////////////////////////////////
 # IMPORTED LIB COPY COMMANDS
 # ////////////////////////////////////////////////////////////////////////////////
 
@@ -192,9 +216,12 @@ add_custom_command(TARGET gen-cmake POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
 		${PROJECT_SOURCE_DIR}/dep/lib/JSON
 		${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}
-)# Copy libraries imported by JSON to executable output dir
+)
+
+# Copy libraries imported by JSON to executable output dir
 add_custom_command(TARGET visualize-links POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
 		${PROJECT_SOURCE_DIR}/dep/lib/JSON
 		${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}
 )
+
