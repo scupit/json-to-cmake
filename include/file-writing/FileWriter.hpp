@@ -18,7 +18,7 @@ class FileWriter {
 		void headerComment(const std::string&);
 		void itemLabel(const std::string&);
 		void newlines(const unsigned int = 1);
-		void libCreationFunctionString(const OutputItem&);
+		std::string libCreationFunctionString(const OutputItem&);
 		
 		void writeOutputDirs(OutputItem&);
 		void writeWatermark();

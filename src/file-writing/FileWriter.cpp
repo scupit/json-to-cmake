@@ -185,7 +185,12 @@ void FileWriter::writeBuildTargets() {
     << "\nmessage( \"Building project '" CMAKE_BUILD_CONFIG << "' configuration\" )";
 }
 
-// void libCreationFunctionString(const OutputItem&);
+std::string FileWriter::libCreationFunctionString(const OutputItem& lib) {
+  return lib.canToggleLibraryType()
+    ? "createLibraryWithTypeToggle"
+    : "add_library";
+}
+
 // void writeGeneralOutputData(OutputItem&);
 // void writeSharedLib(OutputItem&);
 // void writeStaticLib(OutputItem&);
