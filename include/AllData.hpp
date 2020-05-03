@@ -36,9 +36,11 @@ class AllData {
 
 		std::vector<OutputItem*> getExesPartOfLinkTree(ImportedLib&);
 
+		bool hasImportedLibs() { return !m_importedLibs.empty(); }
 		bool hasIndividualOutputsOfType(OutputType);
 		bool hasLibraryThatCanBeToggled();
 		bool hasLibOutputGroups();
+		bool hasLinkedLibs();
 		bool hasExeOutputGroups();
 		bool anyOutputsDefined();
 };

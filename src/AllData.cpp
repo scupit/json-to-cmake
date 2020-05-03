@@ -173,6 +173,27 @@ bool AllData::hasLibOutputGroups() {
   return false;
 }
 
+bool AllData::hasLinkedLibs() {
+  for (OutputItem& output : m_outputs) {
+    if (output.hasLinkedLibs()) {
+      return true;
+    }
+  }
+
+  for (OutputGroup& group : m_outputGroups) {
+    if (group.hasLinkedLibs()) {
+      return true;
+    }
+
+    for (OutputItem& output : group.outputs()) {
+      if (output.hasLinkedLibs()) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 bool AllData::hasExeOutputGroups() {
   for (OutputGroup& group : m_outputGroups) {
     if (group.isExeType()) {

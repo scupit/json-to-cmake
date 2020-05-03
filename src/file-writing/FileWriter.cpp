@@ -22,6 +22,34 @@ void FileWriter::write() {
     cmakeLists.open(filePath);
   }
 
+  writeWatermark();
+  writeCmakeVersion();
+  newlines();
+  writeProjectName();
+  newlines(2);
+
+  writeCustomCmakeFunctions();
+
+  writeStandards();
+  newlines(2);
+
+  writeBuildTargets();
+  newlines(2);
+
+  if (data->hasImportedLibs()) {
+    writeImportedLibs();
+  }
+
+  writeOutputs();
+
+  if (data->hasLinkedLibs()) {
+    writeLinks();
+  }
+
+  if (data->hasImportedLibs()) {
+    writeImportedLibCopyCommands();
+  }
+
   cmakeLists.close();
 }
 
@@ -66,6 +94,7 @@ void FileWriter::writeCustomCmakeFunctions() {
     headerComment("Custom Functions");
     cmakeLists << CmakeCustomFunctions::TOGGLEABLE_LIBRARY_CREATOR << std::endl;
   }
+  newlines(2);
 }
 
 void FileWriter::writeImportedLibs() {
