@@ -318,7 +318,13 @@ void FileWriter::writeLibOutput(OutputItem& lib, const std::string& type) {
   writeGeneralOutputData(lib); 
   newlines(2);
 
-  cmakeLists << libCreationFunctionString(lib) << "( " << lib.name() << " " << type << " " << inQuotes(inBraces(sourcesVariable(lib.name()))) << " )";
+  std::string sourceVar = inBraces(sourcesVariable(lib.name()));
+
+  if (lib.canToggleLibraryType()) {
+    sourceVar = inQuotes(sourceVar);
+  }
+
+  cmakeLists << libCreationFunctionString(lib) << "( " << lib.name() << " " << type << " " << sourceVar << " )";
   if (lib.hasOrInheritsIncludeDirs()) {
     cmakeLists << "\ntarget_include_directories( " << lib.name() << " PRIVATE " << inBraces(includeDirsVariable(lib.name())) << " )";
   }
@@ -475,7 +481,6 @@ void FileWriter::writeOutputGroups() {
         writeLibraryGroup(group);
       }
     }
-    newlines(2);
   } 
 
   if (data->hasExeOutputGroups()) {
@@ -485,7 +490,6 @@ void FileWriter::writeOutputGroups() {
         writeExeGroup(group);
       }
     }
-    newlines(2);
   }
 }
 

@@ -27,7 +27,7 @@ void FileRetriever::loadSourceFiles(std::set<std::string>& sourcesSet, JsonValue
 
   if (jsonDataItem.hasOwnProperty(Tags::INDIVIDUAL_SOURCES)) {
     for (JsonValue& givenDir : jsonDataItem[Tags::INDIVIDUAL_SOURCES].asVector()) {
-      sourcesSet.insert(FileHelper::resolveFromRoot(givenDir.asString()));
+      sourcesSet.insert(FileHelper::normalizeAbsolutePath(FileHelper::resolveFromRoot(givenDir.asString())));
     }
   }
 }
@@ -60,7 +60,7 @@ void FileRetriever::loadHeaderFiles(std::set<std::string>& headerSet, JsonValue&
 
   if (jsonDataItem.hasOwnProperty(Tags::INDIVIDUAL_HEADERS)) {
     for (JsonValue& givenDir : jsonDataItem[Tags::INDIVIDUAL_HEADERS].asVector()) {
-      headerSet.insert(FileHelper::resolveFromRoot(givenDir.asString()));
+      headerSet.insert(FileHelper::normalizeAbsolutePath(FileHelper::resolveFromRoot(givenDir.asString())));
     }
   }
 }
