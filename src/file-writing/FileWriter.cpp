@@ -355,7 +355,66 @@ void FileWriter::writeOutputs() {
   }
 }
 
-// void writeGeneralGroupData(OutputGroup&);
+void FileWriter::writeGeneralGroupData(OutputGroup& group) {
+  const std::string prefixedName = group.getPrefixedName();
+  itemLabel("Output Group " + prefixedName);
+
+  if (group.hasOrInheritsHeaders()) {
+    // Write headers
+    cmakeLists << "set( " << headersVariable(prefixedName);
+    for (const ImportedLib* linkedImport : group.getAllLinkedImportedLibs()) {
+      if (linkedImport->hasHeaders()) {
+        cmakeLists << "\n\t" << inBraces(headersVariable(linkedImport->name()));
+      }
+    }
+
+    for (const OutputItem* linkedOutput : group.getAllLinkedOutputs()) {
+      if (linkedOutput->hasOrInheritsHeaders()) {
+        cmakeLists << "\n\t" << inBraces(headersVariable(linkedOutput->name()));
+      }
+    }
+
+    for (const std::string& headerFile : group.headers()) {
+      cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << headerFile;
+    }
+  }
+
+  newlines(2);
+
+  // Write sources, which include the item's headers if they exist
+  cmakeLists << "set( " << sourcesVariable(prefixedName);
+  if (group.hasOrInheritsHeaders()) {
+    cmakeLists << "\n\t" << inBraces(headersVariable(prefixedName));
+  }
+
+  for (const std::string& sourceFile : group.sources()) {
+    cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << sourceFile;
+  }
+  cmakeLists << "\n)";
+
+  // Write include dirs
+  if (group.hasOrInheritsHeaders()) {
+    cmakeLists << "set( " << includeDirsVariable(prefixedName);
+
+    for (const ImportedLib* linkedImport : group.getAllLinkedImportedLibs()) {
+      if (linkedImport->hasIncludeDirs()) {
+        cmakeLists << "\n\t" << inBraces(includeDirsVariable(linkedImport->name()));
+      }
+    }
+
+    for (const OutputItem* linkedOutput : group.getAllLinkedOutputs()) {
+      if (linkedOutput->hasOrInheritsIncludeDirs()) {
+        cmakeLists << "\n\t" << inBraces(includeDirsVariable(linkedOutput->name()));
+      }
+    }
+
+    for (const std::string& includeDir : group.includeDirs()) {
+      cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << includeDir;
+    }
+    cmakeLists << "\n)";
+  }
+}
+
 // void writeLibraryGroup(OutputGroup&);
 // void writeExeGroup(OutputGroup&);
 // void writeOutputGroups();
