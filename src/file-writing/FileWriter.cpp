@@ -77,6 +77,7 @@ void FileWriter::newlines(const unsigned int numNewlines) {
 void FileWriter::writeWatermark() {
   cmakeLists << "################################################################################" << std::endl
              << "# Generated with Skylar Cupit's json-to-cmake tool" << std::endl
+             << "# Github: https://github.com/scupit/json-to-cmake" << std::endl
              << "################################################################################";
 }
 

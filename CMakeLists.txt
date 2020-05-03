@@ -1,5 +1,6 @@
 ################################################################################
 # Generated with Skylar Cupit's json-to-cmake tool
+# Github: https://github.com/scupit/json-to-cmake
 ################################################################################
 
 cmake_minimum_required( VERSION 3.12 )

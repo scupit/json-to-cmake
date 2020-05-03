@@ -14,6 +14,7 @@ int main(int argc, const char** argv) {
   try {
     AllData data;
     FileWriter(&data, joinPath({ projectRootString, Globals::CMAKE_FILE_NAME })).write();
+    cout << "CMakeLists.txt written successfully!";
   }
   catch (std::runtime_error& e) {
     cout << e.what();
