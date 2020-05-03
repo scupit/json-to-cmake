@@ -453,7 +453,47 @@ void FileWriter::writeOutputGroups() {
   }
 }
 
-// void writeLinksForItem(const std::string&, const std::vector<OutputItem*>, const std::vector<ImportedLib*>&);
-// void writeLinks();
+void FileWriter::writeLinksForItem(const std::string& targetItemName, const std::vector<OutputItem*> linkedOutputs, const std::vector<ImportedLib*>& linkedImports) {
+  cmakeLists << "target_link_libraries( " << targetItemName;
+
+  for (const ImportedLib* linkedImport : linkedImports) {
+    for (const std::string& libFileName : linkedImport->libFiles()) {
+      cmakeLists << "\n\t" << inBraces(mangleLibName(linkedImport->name(), libFileName));
+    }
+  }
+
+  for (const OutputItem* linkedOutput : linkedOutputs) {
+    cmakeLists << "\n\t" << linkedOutput->name();
+  }
+  cmakeLists << "\n)";
+}
+
+void FileWriter::writeLinks() {
+  headerComment("LINK LIBRARIES TO OUTPUTS");
+
+  for (OutputGroup& group : data->outputGroups()) {
+    for (OutputItem& output : group.outputs()) {
+      if (group.hasLinkedLibs() || output.hasLinkedLibs()) {
+        std::vector<OutputItem*> linkedOutputs = output.getAllLinkedOutputs();
+        std::vector<ImportedLib*> linkedImports = output.getAllLinkedImportedLibs();
+
+        for (OutputItem* linkedOutput : group.getAllLinkedOutputs()) {
+          linkedOutputs.push_back(linkedOutput);
+        }
+        for (ImportedLib* linkedImport : group.getAllLinkedImportedLibs()) {
+          linkedImports.push_back(linkedImport);
+        }
+
+        writeLinksForItem(output.name(), linkedOutputs, output.getAllLinkedImportedLibs());
+      }
+    }
+  }
+
+  for (OutputItem& output : data->outputs()) {
+    if (output.hasLinkedLibs()) {
+      writeLinksForItem(output.name(), output.getAllLinkedOutputs(), output.getAllLinkedImportedLibs());
+    }
+  }
+}
 
 // void writeImportedLibCopyCommands();
