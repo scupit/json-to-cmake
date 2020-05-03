@@ -118,6 +118,18 @@ void AllData::validateLoadedItems() {
   }
 }
 
+bool AllData::hasIndividualOutputsOfType(OutputType type) {
+  for (OutputItem& output : m_outputs) {
+    if (type == OutputType::EXE && output.isExeType())
+      return true;
+    else if (type == OutputType::SHARED_LIB && output.isSharedLibType())
+      return true;
+    else if (type == OutputType::STATIC_LIB && output.isStaticLibType())
+      return true;
+  }
+  return false;
+}
+
 bool AllData::hasLibraryThatCanBeToggled() {
   for (OutputGroup& group : m_outputGroups) {
     if (group.hasLibraryThatCanBeToggled()) {

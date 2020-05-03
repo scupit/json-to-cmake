@@ -34,6 +34,8 @@ class AllData {
 		std::vector<BuildTarget>& buildTargets() { return m_buildTargets; }
 		GeneralData& generalData() { return m_generalData; }
 
+		bool hasIndividualOutputsOfType(OutputType);
+
 		bool hasLibraryThatCanBeToggled();
 		bool anyOutputsDefined();
 };

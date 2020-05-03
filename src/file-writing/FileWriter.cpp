@@ -259,7 +259,6 @@ void FileWriter::writeGeneralOutputData(OutputItem& output) {
 
   newlines(2);
 
-
   if (output.hasOrInheritsIncludeDirs()) {
     // Write include dirs
     cmakeLists << "set( " << includeDirsVariable(output.name());
@@ -285,11 +284,76 @@ void FileWriter::writeGeneralOutputData(OutputItem& output) {
   }
 }
 
-// void writeSharedLib(OutputItem&);
-// void writeStaticLib(OutputItem&);
-// void writeExe(OutputItem&);
-// void writeOutputDirs(OutputItem&);
-// void writeOutputs();
+void FileWriter::writeLibOutput(OutputItem& lib, const std::string& type) {
+  writeGeneralOutputData(lib); 
+  newlines(2);
+
+  cmakeLists << libCreationFunctionString(lib) << "( " << lib.name() << " " << type << " " << inQuotes(inBraces(sourcesVariable(lib.name()))) << " )";
+  if (lib.hasOrInheritsIncludeDirs()) {
+    cmakeLists << "\ntarget_include_directories( " << lib.name() << " PRIVATE " << inBraces(includeDirsVariable(lib.name())) << " )";
+  }
+  newlines(2);
+  writeOutputDirs(lib);
+}
+
+void FileWriter::writeExe(OutputItem& outputExe) {
+  writeGeneralOutputData(outputExe);
+  newlines(2);
+
+  cmakeLists << "add_executable( " << outputExe.name() << ' ' << inBraces(sourcesVariable(outputExe.name())) << " )";
+  if (outputExe.hasOrInheritsIncludeDirs()) {
+    cmakeLists << "\ntarget_include_directories( " << outputExe.name() << " PRIVATE " << inBraces(includeDirsVariable(outputExe.name())) << " )";
+  }
+  newlines(2);
+  writeOutputDirs(outputExe);
+}
+
+void FileWriter::writeOutputDirs(OutputItem& output) {
+  cmakeLists << "set_target_properties( " << output.name() << " PROPERTIES";
+
+  if (output.isLibraryType()) {
+    cmakeLists << "\n\tARCHIVE_OUTPUT_DIRECTORY " << getOutputDir(OutputItem::archiveOutputDir)
+      << "\n\tLIBRARY_OUTPUT_DIRECTORY " << getOutputDir(OutputItem::libOutputDir);
+  }
+
+  if (output.isExeType() || output.isSharedLibType() || output.canToggleLibraryType()) {
+    cmakeLists << "\n\tRUNTIME_OUTPUT_DIRECTORY " << getOutputDir(OutputItem::exeOutputDir);
+  }
+  cmakeLists << "\n)";
+}
+
+void FileWriter::writeOutputs() {
+  if (data->hasIndividualOutputsOfType(OutputType::SHARED_LIB)) {
+    headerComment("INDIVIDUAL OUTPUT SHARED LIBRARIES");
+
+    for (OutputItem& output : data->outputs()) {
+      if (output.isSharedLibType()) {
+        writeLibOutput(output, "SHARED");
+      }
+    }
+  }
+
+  if (data->hasIndividualOutputsOfType(OutputType::STATIC_LIB)) {
+    headerComment("INDIVIDUAL OUTPUT STATIC LIBRARIES");
+
+    for (OutputItem& output : data->outputs()) {
+      if (output.isStaticLibType()) {
+        writeLibOutput(output, "STATIC");
+      }
+    }
+  }
+
+  writeOutputGroups();
+
+  if (data->hasIndividualOutputsOfType(OutputType::EXE)) {
+    headerComment("INDIVIDUAL OUTPUT EXECUTABLES");
+    for (OutputItem& output : data->outputs()) {
+      if (output.isExeType()) {
+        writeExe(output);
+      }
+    }
+  }
+}
 
 // void writeGeneralGroupData(OutputGroup&);
 // void writeLibraryGroup(OutputGroup&);

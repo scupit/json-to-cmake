@@ -32,8 +32,7 @@ class FileWriter {
 		void writeBuildTargets();
 
 		void writeGeneralOutputData(OutputItem&);
-		void writeSharedLib(OutputItem&);
-		void writeStaticLib(OutputItem&);
+		void writeLibOutput(OutputItem&, const std::string&);
 		void writeExe(OutputItem&);
 		void writeOutputs();
 
