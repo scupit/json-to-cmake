@@ -3,9 +3,9 @@
 #include "file-writing/CmakeCustomFunctions.hpp"
 #include "helpers/FileWriteHelper.hpp"
 
-FileWriter::FileWriter(AllData& projectData, const std::string& fileNameWriting)
+FileWriter::FileWriter(AllData* projectData, const std::string& fileNameWriting)
   : cmakeLists(std::ofstream(fileNameWriting)),
-    data(&projectData),
+    data(projectData),
     filePath(fileNameWriting)
 {
   write();
@@ -274,7 +274,7 @@ void FileWriter::writeGeneralOutputData(OutputItem& output) {
     cmakeLists << "\n\t" << inBraces(headersVariable(output.name()));
   }
 
-  if (output.isContainedInGroup() && output.containingGroup()->hasOrInheritsHeaders()) {
+  if (output.isContainedInGroup()) {
     cmakeLists << "\n\t" << inBraces(sourcesVariable(output.containingGroup()->getPrefixedName()));
   }
 
@@ -324,6 +324,7 @@ void FileWriter::writeLibOutput(OutputItem& lib, const std::string& type) {
   }
   newlines(2);
   writeOutputDirs(lib);
+  newlines(2);
 }
 
 void FileWriter::writeExe(OutputItem& outputExe) {
@@ -336,6 +337,7 @@ void FileWriter::writeExe(OutputItem& outputExe) {
   }
   newlines(2);
   writeOutputDirs(outputExe);
+  newlines(2);
 }
 
 void FileWriter::writeOutputDirs(OutputItem& output) {
@@ -361,7 +363,6 @@ void FileWriter::writeOutputs() {
         writeLibOutput(output, "SHARED");
       }
     }
-    newlines(2);
   }
 
   if (data->hasIndividualOutputsOfType(OutputType::STATIC_LIB)) {
@@ -372,7 +373,6 @@ void FileWriter::writeOutputs() {
         writeLibOutput(output, "STATIC");
       }
     }
-    newlines(2);
   }
 
   writeOutputGroups();
@@ -384,7 +384,6 @@ void FileWriter::writeOutputs() {
         writeExe(output);
       }
     }
-    newlines(2);
   }
 }
 
@@ -411,9 +410,9 @@ void FileWriter::writeGeneralGroupData(OutputGroup& group) {
       cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << headerFile;
     }
     cmakeLists << "\n)";
+    newlines(2);
   }
 
-  newlines(2);
 
   // Write sources, which include the item's headers if they exist
   cmakeLists << "set( " << sourcesVariable(prefixedName);
@@ -428,7 +427,7 @@ void FileWriter::writeGeneralGroupData(OutputGroup& group) {
   newlines(2);
 
   // Write include dirs
-  if (group.hasOrInheritsHeaders()) {
+  if (group.hasOrInheritsIncludeDirs()) {
     cmakeLists << "set( " << includeDirsVariable(prefixedName);
 
     for (const ImportedLib* linkedImport : group.getAllLinkedImportedLibs()) {

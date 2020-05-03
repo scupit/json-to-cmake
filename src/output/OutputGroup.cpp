@@ -10,13 +10,12 @@ OutputGroup::OutputGroup(const std::string& name, JsonValue& outputGroupData)
 {
   try {
     loadType(outputGroupData);
+    loadCanToggleType(outputGroupData);
+    loadOutputs(outputGroupData);
   }
   catch (std::logic_error& e) {
     logErrorThenQuit(e.what());
   }
-
-  loadCanToggleType(outputGroupData);
-  loadOutputs(outputGroupData);
 }
 
 OutputGroup::~OutputGroup() { }
@@ -39,7 +38,8 @@ void OutputGroup::loadOutputs(JsonValue& outputGroupData) {
       outputItemData[Tags::LIB_TYPE_TOGGLE_POSSIBLE] = m_canToggleLibraryType;
     }
 
-    m_outputs.emplace_back(name, outputItemData, this);
+    // m_outputs.emplace_back(name, outputItemData, this);
+    m_outputs.emplace_back(name, outputItemData);
   }
 
   if (m_outputs.empty()) {

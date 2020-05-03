@@ -24,6 +24,8 @@ class OutputItem : public OutputBase {
 		OutputItem(const std::string&, JsonValue&, OutputGroup* = nullptr);
 		~OutputItem();
 
+		void associateWithGroup(OutputGroup* group) { groupContainedIn = group; }
+
 		inline bool isContainedInGroup() const { return groupContainedIn != nullptr; }
 		const OutputGroup* containingGroup() const { return groupContainedIn; }
 		const std::string& mainFile() const { return m_mainFile; }

@@ -49,6 +49,13 @@ void AllData::loadGroups(JsonValue& jsonData) {
     for (auto& [name, outputGroupData] : jsonData[Tags::OUTPUT_GROUPS].asMap()) {
       m_outputGroups.emplace_back(name, outputGroupData);
     }
+
+    // Correctly associate groups with their contained output items
+    for (OutputGroup& group : m_outputGroups) {
+      for (OutputItem& output : group.outputs()) {
+        output.associateWithGroup(&group);
+      }
+    }
   }
 }
 

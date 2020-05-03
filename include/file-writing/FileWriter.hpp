@@ -47,7 +47,7 @@ class FileWriter {
 		void writeImportedLibCopyCommands();
 
 	public:
-		FileWriter(AllData&, const std::string&);
+		FileWriter(AllData*, const std::string&);
 		~FileWriter();
 
 		void write();
