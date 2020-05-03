@@ -496,4 +496,28 @@ void FileWriter::writeLinks() {
   }
 }
 
-// void writeImportedLibCopyCommands();
+void FileWriter::writeImportedLibCopyCommands() {
+  headerComment("IMPORTED LIB COPY COMMANDS");
+
+  for (ImportedLib& importedLib : data->importedLibs()) {
+    std::vector<OutputItem*> exesLinkedTo = data->getExesPartOfLinkTree(importedLib);
+
+    if (exesLinkedTo.empty()) {
+      if (!data->outputs().empty()) {
+        exesLinkedTo.push_back(&data->outputs()[0]);
+      }
+      else {
+        exesLinkedTo.push_back(&data->outputGroups()[0].outputs()[0]);
+      }
+    }
+
+    for (OutputItem* exeLinkedTo : exesLinkedTo) {
+      itemLabel("Copy libraries imported by " + importedLib.name() + " to executable output dir");
+      cmakeLists << "add_custom_command(TARGET " << exeLinkedTo->name() << " POST_BUILD"
+        << "\n\tCOMMAND ${CMAKE_COMMAND} -E copy_directory"
+        << "\n\t\t" PROJECT_SOURCE_DIR "/" << importedLib.dirContainingLibFiles()
+        << "\n\t\t" << getOutputDir(OutputItem::exeOutputDir)
+        << "\n)";
+    }
+  }
+}

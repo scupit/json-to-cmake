@@ -34,6 +34,8 @@ class AllData {
 		std::vector<BuildTarget>& buildTargets() { return m_buildTargets; }
 		GeneralData& generalData() { return m_generalData; }
 
+		std::vector<OutputItem*> getExesPartOfLinkTree(ImportedLib&);
+
 		bool hasIndividualOutputsOfType(OutputType);
 		bool hasLibraryThatCanBeToggled();
 		bool hasLibOutputGroups();

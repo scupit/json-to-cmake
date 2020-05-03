@@ -118,6 +118,25 @@ void AllData::validateLoadedItems() {
   }
 }
 
+std::vector<OutputItem*> AllData::getExesPartOfLinkTree(ImportedLib& libChecking) {
+  std::vector<OutputItem*> exesLinkedTo;
+
+  for (OutputItem& output : m_outputs) {
+    if (output.isExeType() && output.isPartOfImportedLibLinkTree(libChecking)) {
+      exesLinkedTo.push_back(&output);
+    }
+  }
+
+  for (OutputGroup& group : m_outputGroups) {
+    for (OutputItem& output : group.outputs()) {
+      if (output.isExeType() && output.isPartOfImportedLibLinkTree(libChecking)) {
+        exesLinkedTo.push_back(&output);
+      }
+    }
+  }
+  return exesLinkedTo;
+}
+
 bool AllData::hasIndividualOutputsOfType(OutputType type) {
   for (OutputItem& output : m_outputs) {
     if (type == OutputType::EXE && output.isExeType())
