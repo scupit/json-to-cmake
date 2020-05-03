@@ -23,6 +23,7 @@ void FileWriter::write() {
   }
 
   writeWatermark();
+  newlines(2);
   writeCmakeVersion();
   newlines();
   writeProjectName();
@@ -174,7 +175,7 @@ void FileWriter::writeBuildTargets() {
   cmakeLists << ')';
 
   // Default build target
-  cmakeLists << "if( NOT " CMAKE_BUILD_CONFIG " )"
+  cmakeLists << "\nif( NOT " CMAKE_BUILD_CONFIG " )"
     << "\n\tset( CMAKE_BUILD_TYPE " << inQuotes(data->generalData().defaultBuildTarget->name()) << " CACHE STRING \"Project Configuration\" FORCE )"
     << "\nendif()";
   newlines();

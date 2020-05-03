@@ -11,8 +11,8 @@
 
 class FileWriter {
 	private:
-		AllData* data;
 		std::ofstream cmakeLists;
+		AllData* data;
 		std::string filePath;
 
 		void headerComment(const std::string&);

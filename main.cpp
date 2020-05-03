@@ -1,18 +1,19 @@
 #include <filesystem>
 #include <iostream>
 #include "AllData.hpp"
+#include "constants/Globals.hpp"
+#include "file-writing/FileWriter.hpp"
 #include "helpers/FileHelper.hpp"
 
 using namespace std;
+using namespace FileHelper;
 
 int main(int argc, const char** argv) {
-  FileHelper::projectRootString.assign(FileHelper::resolve(filesystem::current_path(), argc > 1 ? argv[1] : ""));
+  projectRootString.assign(resolve(filesystem::current_path(), argc > 1 ? argv[1] : ""));
 
   try {
     AllData data;
-    cout << data.generalData().defaultBuildTarget->name() << endl;
-
-    // TODO: Write data to CMakeLists.txt
+    FileWriter(data, joinPath({ projectRootString, Globals::CMAKE_FILE_NAME })).write();
   }
   catch (std::runtime_error& e) {
     cout << e.what();

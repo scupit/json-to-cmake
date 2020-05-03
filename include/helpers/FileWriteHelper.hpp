@@ -3,7 +3,7 @@
 
 #define PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}"
 #define CMAKE_BINARY_DIR "${CMAKE_BINARY_DIR}"
-#define CMAKE_BUILD_CONFIG "${CMAKE_BUILD_TARGET}"
+#define CMAKE_BUILD_CONFIG "${CMAKE_BUILD_TYPE}"
 
 #include <iostream>
 #include <string>

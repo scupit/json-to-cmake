@@ -134,6 +134,7 @@ std::vector<OutputItem*> OutputBase::getAllLinkedOutputs() {
     outputList.push_back(linkedOutput);
   }
   getAllOutputsFromLinkedGroups(outputList);
+  return outputList;
 }
 
 std::vector<ImportedLib*> OutputBase::getAllLinkedImportedLibs() {
