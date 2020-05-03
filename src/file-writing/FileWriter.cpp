@@ -2,6 +2,7 @@
 
 #include "file-writing/CmakeCustomFunctions.hpp"
 #include "helpers/FileWriteHelper.hpp"
+#include "helpers/StringHelper.hpp"
 
 FileWriter::FileWriter(AllData* projectData, const std::string& fileNameWriting)
   : cmakeLists(std::ofstream(fileNameWriting)),
@@ -499,7 +500,7 @@ void FileWriter::writeLinksForItem(const std::string& targetItemName, const std:
 
   for (const ImportedLib* linkedImport : linkedImports) {
     for (const std::string& libFileName : linkedImport->libFiles()) {
-      cmakeLists << "\n\t" << inBraces(mangleLibName(linkedImport->name(), libFileName));
+      cmakeLists << "\n\t" << inBraces(mangleLibName(linkedImport->name(), StringHelper::split(libFileName, " ")[0]));
     }
   }
 
