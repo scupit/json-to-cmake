@@ -1,5 +1,7 @@
 #include "file-writing/FileWriter.hpp"
+
 #include "file-writing/CmakeCustomFunctions.hpp"
+#include "helpers/FileWriteHelper.hpp"
 
 FileWriter::FileWriter(AllData& projectData, const std::string& fileNameWriting)
   : cmakeLists(std::ofstream(fileNameWriting)),
@@ -48,7 +50,6 @@ void FileWriter::writeWatermark() {
   cmakeLists << "################################################################################" << std::endl
              << "# Generated with Skylar Cupit's json-to-cmake tool" << std::endl
              << "################################################################################";
-  newlines(2);
 }
 
 void FileWriter::writeCmakeVersion() {
@@ -67,7 +68,40 @@ void FileWriter::writeCustomCmakeFunctions() {
   }
 }
 
-// void writeImportedLibs();
+void FileWriter::writeImportedLibs() {
+  headerComment("IMPORTED LIBRARIES");
+
+  for (ImportedLib& lib : data->importedLibs()) {
+    itemLabel("Imported library: " + lib.name());
+
+    if (lib.hasIncludeDirs()) {
+      cmakeLists << "set( " << includeDirsVariable(lib.name());
+
+      for (const std::string& includeDir : lib.includeDirs()) {
+        cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << includeDir;
+      }
+      cmakeLists << "\n)";
+      newlines(2);
+    }
+
+    if (lib.hasHeaders()) {
+      cmakeLists << "set( " << headersVariable(lib.name());
+
+      for (const std::string& headerFile : lib.headers()) {
+        cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << headerFile;
+      }
+      cmakeLists << "\n)";
+    }
+
+    for (const std::string& libFileName : lib.libFiles()) {
+      newlines(2);
+      cmakeLists << "find_library( " << mangleLibName(lib.name(), libFileName)
+        << "\n\tNAMES " << libFileName
+        << "\n\tPATHS " PROJECT_SOURCE_DIR "/" << lib.dirContainingLibFiles()
+        << "\n)";
+    }
+  }
+}
 
 // void writeStandards();
 // void writeBuildTargets();

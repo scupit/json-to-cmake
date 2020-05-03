@@ -79,9 +79,12 @@ set( g_testing_HEADERS
 	${PROJECT_SOURCE_DIR}/include/Logger.hpp
 	${PROJECT_SOURCE_DIR}/include/constants/Globals.hpp
 	${PROJECT_SOURCE_DIR}/include/constants/Tags.hpp
+	${PROJECT_SOURCE_DIR}/include/file-writing/CmakeCustomFunctions.hpp
+	${PROJECT_SOURCE_DIR}/include/file-writing/FileWriter.hpp
 	${PROJECT_SOURCE_DIR}/include/general-data/BuildTarget.hpp
 	${PROJECT_SOURCE_DIR}/include/general-data/GeneralData.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/FileHelper.hpp
+	${PROJECT_SOURCE_DIR}/include/helpers/FileWriteHelper.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/GitHelper.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/StringHelper.hpp
 	${PROJECT_SOURCE_DIR}/include/output/OutputBase.hpp
@@ -96,9 +99,11 @@ set( g_testing_SOURCES
 	${PROJECT_SOURCE_DIR}/src/ImportedLib.cpp
 	${PROJECT_SOURCE_DIR}/src/Linker.cpp
 	${PROJECT_SOURCE_DIR}/src/Logger.cpp
+	${PROJECT_SOURCE_DIR}/src/file-writing/FileWriter.cpp
 	${PROJECT_SOURCE_DIR}/src/general-data/BuildTarget.cpp
 	${PROJECT_SOURCE_DIR}/src/general-data/GeneralData.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/FileHelper.cpp
+	${PROJECT_SOURCE_DIR}/src/helpers/FileWriteHelper.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/GitHelper.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/StringHelper.cpp
 	${PROJECT_SOURCE_DIR}/src/output/OutputBase.cpp
@@ -147,9 +152,12 @@ set( gen-cmake_HEADERS
 	${PROJECT_SOURCE_DIR}/include/Logger.hpp
 	${PROJECT_SOURCE_DIR}/include/constants/Globals.hpp
 	${PROJECT_SOURCE_DIR}/include/constants/Tags.hpp
+	${PROJECT_SOURCE_DIR}/include/file-writing/CmakeCustomFunctions.hpp
+	${PROJECT_SOURCE_DIR}/include/file-writing/FileWriter.hpp
 	${PROJECT_SOURCE_DIR}/include/general-data/BuildTarget.hpp
 	${PROJECT_SOURCE_DIR}/include/general-data/GeneralData.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/FileHelper.hpp
+	${PROJECT_SOURCE_DIR}/include/helpers/FileWriteHelper.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/GitHelper.hpp
 	${PROJECT_SOURCE_DIR}/include/helpers/StringHelper.hpp
 	${PROJECT_SOURCE_DIR}/include/output/OutputBase.hpp
@@ -165,9 +173,11 @@ set( gen-cmake_SOURCES
 	${PROJECT_SOURCE_DIR}/src/ImportedLib.cpp
 	${PROJECT_SOURCE_DIR}/src/Linker.cpp
 	${PROJECT_SOURCE_DIR}/src/Logger.cpp
+	${PROJECT_SOURCE_DIR}/src/file-writing/FileWriter.cpp
 	${PROJECT_SOURCE_DIR}/src/general-data/BuildTarget.cpp
 	${PROJECT_SOURCE_DIR}/src/general-data/GeneralData.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/FileHelper.cpp
+	${PROJECT_SOURCE_DIR}/src/helpers/FileWriteHelper.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/GitHelper.cpp
 	${PROJECT_SOURCE_DIR}/src/helpers/StringHelper.cpp
 	${PROJECT_SOURCE_DIR}/src/output/OutputBase.cpp

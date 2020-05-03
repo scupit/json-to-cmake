@@ -31,6 +31,7 @@ class ImportedLib {
 		~ImportedLib();
 
 		const std::string& name() const { return m_name; }
+		const std::string& dirContainingLibFiles() const { return m_dirContainingLibraryFiles; }
 		const std::string& generatedDirname() const { return m_generatedDepDirname; }
 		const std::string& gitRepoToClone() const { return m_gitRepoToClone; }
 		const std::set<std::string>& headers() const { return m_headers; }
