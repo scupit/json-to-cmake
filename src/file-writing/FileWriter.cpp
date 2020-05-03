@@ -103,7 +103,37 @@ void FileWriter::writeImportedLibs() {
   }
 }
 
-// void writeStandards();
+void FileWriter::writeStandards() {
+  headerComment("LANGUAGE STANDARDS");
+
+  // Default C standard
+  cmakeLists << "set( CMAKE_C_STANDARD " << data->generalData().defaultCStandard << " CACHE STRING \"C compiler standard\" )";
+
+  // Supported C standard
+  cmakeLists << "\nset_property( CACHE CMAKE_C_STANDARD PROPERTY STRINGS ";
+  for (const std::string& standard : data->generalData().supportedCStandards) {
+    cmakeLists << standard << ' ';
+  }
+  cmakeLists << ')'
+    << "\nmessage( \"Using C compiler standard --std=c${CMAKE_C_STANDARD}\" )";
+
+  // Default C++ standard
+  cmakeLists << "\n\nset( CMAKE_CXX_STANDARD " << data->generalData().defaultCppStandard << " CACHE STRING \"CXX compiler standard\" )" ;
+
+  // Supported C++ standards
+  cmakeLists << "\nset_property( CACHE CMAKE_CXX_STANDARD PROPERTY STRINGS ";
+  for (const std::string& standard : data->generalData().supportedCppStandards) {
+    cmakeLists << standard << ' ';
+  }
+  cmakeLists << ')'
+    << "\nmessage( \"Using CXX compiler standard --std=c++${CMAKE_CXX_STANDARD}\" )";
+
+  cmakeLists << "\n\nset( CMAKE_C_STANDARD_REQUIRED ON )"
+    << "\nset( CMAKE_CXX_STANDARD_REQUIRED ON )"
+    << "\n\nset( CMAKE_C_EXTENSIONS OFF )"
+    << "\nset( CMAKE_CXX_EXTENSIONS OFF )";
+}
+
 // void writeBuildTargets();
 
 // void libCreationFunctionString(const OutputItem&);
