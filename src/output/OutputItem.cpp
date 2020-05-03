@@ -12,7 +12,7 @@ const std::string OutputItem::archiveOutputDir = "lib";
 
 OutputItem::OutputItem(const std::string& name, JsonValue& outputItemData, OutputGroup* groupContainedIn)
   : OutputBase(name, outputItemData),
-    mainFile(std::string()),
+    m_mainFile(std::string()),
     groupContainedIn(groupContainedIn)
 {
   try {
@@ -34,7 +34,7 @@ void OutputItem::loadType(JsonValue& outputItemData) {
 
 void OutputItem::loadMainFile(JsonValue& outputItemData) {
   if (isExeType() && outputItemData.hasOwnProperty(Tags::MAIN_FILE)) {
-    mainFile = FileHelper::normalizeAbsolutePath(FileHelper::resolveFromRoot(outputItemData[Tags::MAIN_FILE].asString()));
+    m_mainFile = FileHelper::normalizeAbsolutePath(FileHelper::resolveFromRoot(outputItemData[Tags::MAIN_FILE].asString()));
   }
 }
 

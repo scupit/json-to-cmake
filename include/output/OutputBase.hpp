@@ -63,8 +63,8 @@ class OutputBase {
 		virtual bool hasOrInheritsHeaders() const;
 		virtual bool hasOrInheritsIncludeDirs() const;
 
-		void getAllLinkedOutputs(std::vector<OutputItem*>&);
-		void getAllLinkedImportedLibs(std::vector<ImportedLib*>&);
+		std::vector<OutputItem*> getAllLinkedOutputs();
+		std::vector<ImportedLib*> getAllLinkedImportedLibs();
 
 		void linkLib(ImportedLib*);
 		void linkLib(OutputItem*);

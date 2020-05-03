@@ -14,7 +14,7 @@ class OutputItem : public OutputBase {
 		static const std::string archiveOutputDir;
 
 	private:
-		std::string mainFile;
+		std::string m_mainFile;
 		OutputGroup* groupContainedIn;
 
 		void loadType(JsonValue&) override;
@@ -26,7 +26,9 @@ class OutputItem : public OutputBase {
 
 		inline bool isContainedInGroup() const { return groupContainedIn != nullptr; }
 		const OutputGroup* containingGroup() const { return groupContainedIn; }
+		const std::string& mainFile() const { return m_mainFile; }
 
+		bool hasMainFile() const { return isExeType() && !m_mainFile.empty(); }
 		bool parentGroupHasHeaders() const;
 		bool parentGroupHasIncludeDirs() const;
 

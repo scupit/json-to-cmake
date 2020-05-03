@@ -128,17 +128,16 @@ void OutputBase::getAllOutputsFromLinkedGroups(std::vector<OutputItem*>& outputL
   }
 }
 
-void OutputBase::getAllLinkedOutputs(std::vector<OutputItem*>& outputList) {
+std::vector<OutputItem*> OutputBase::getAllLinkedOutputs() {
+  std::vector<OutputItem*> outputList;
   for (OutputItem* linkedOutput : linkedOutputs) {
     outputList.push_back(linkedOutput);
   }
   getAllOutputsFromLinkedGroups(outputList);
 }
 
-void OutputBase::getAllLinkedImportedLibs(std::vector<ImportedLib*>& importedLibList) {
-  for (ImportedLib* linkedImport : linkedImportedLibs) {
-    importedLibList.push_back(linkedImport);
-  }
+std::vector<ImportedLib*> OutputBase::getAllLinkedImportedLibs() {
+  return linkedImportedLibs;
 }
 
 bool OutputBase::isPartOfImportedLibLinkTree(const ImportedLib& importedLib) const {

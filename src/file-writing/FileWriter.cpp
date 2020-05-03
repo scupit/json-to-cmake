@@ -191,7 +191,100 @@ std::string FileWriter::libCreationFunctionString(const OutputItem& lib) {
     : "add_library";
 }
 
-// void writeGeneralOutputData(OutputItem&);
+void FileWriter::labelOutput(OutputItem& output) {
+  const std::string toggleableString = output.canToggleLibraryType()
+    ? " (toggleable)"
+    : "";
+
+  if (output.isExeType()) {
+    itemLabel("Output executable: " + output.name());
+  }
+  else if (output.isLibraryType()) {
+    const std::string libType = output.isSharedLibType()
+      ? "shared"
+      : "static";
+    itemLabel("Output " + libType + " library" + toggleableString + ": " + output.name());
+  }
+}
+
+void FileWriter::writeGeneralOutputData(OutputItem& output) {
+  labelOutput(output);
+
+  if (output.hasOrInheritsHeaders()) {
+    // Write headers
+    cmakeLists << "set( " << headersVariable(output.name());
+
+    if (output.isContainedInGroup()) {
+      cmakeLists << "\n\t" << inBraces(headersVariable(output.containingGroup()->getPrefixedName()));
+    }
+
+    for (const ImportedLib* linkedLib : output.getAllLinkedImportedLibs()) {
+      if (linkedLib->hasHeaders()) {
+        cmakeLists << "\n\t" << inBraces(headersVariable(linkedLib->name()));
+      }
+    }
+
+    for (const OutputItem* linkedOutput : output.getAllLinkedOutputs()) {
+      if (linkedOutput->hasOrInheritsHeaders()) {
+        cmakeLists << "\n\t" << inBraces(headersVariable(linkedOutput->name()));
+      }
+    }
+
+    for (const std::string& headerFile : output.headers()) {
+      cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << headerFile;
+    }
+
+    cmakeLists << "\n)";
+    newlines(2);
+  }
+
+  // Write sources, which include the item's headers (as cmake variable)
+  cmakeLists << "set( " << sourcesVariable(output.name());
+
+  if (output.hasOrInheritsHeaders()) {
+    cmakeLists << "\n\t" << inBraces(headersVariable(output.name()));
+  }
+
+  if (output.isContainedInGroup() && output.containingGroup()->hasOrInheritsHeaders()) {
+    cmakeLists << "\n\t" << inBraces(sourcesVariable(output.containingGroup()->getPrefixedName()));
+  }
+
+  if (output.hasMainFile()) {
+    cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << output.mainFile();
+  }
+
+  for (const std::string& sourceFile : output.sources()) {
+    cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << sourceFile;
+  }
+
+  newlines(2);
+
+
+  if (output.hasOrInheritsIncludeDirs()) {
+    // Write include dirs
+    cmakeLists << "set( " << includeDirsVariable(output.name());
+
+    if (output.isContainedInGroup() && output.containingGroup()->hasOrInheritsIncludeDirs()) {
+      cmakeLists << "\n\t" << inBraces(includeDirsVariable(output.containingGroup()->getPrefixedName()));
+    }
+
+    for (const ImportedLib* linkedImport : output.getAllLinkedImportedLibs()) {
+      if (linkedImport->hasIncludeDirs()) {
+        cmakeLists << "\n\t" << inBraces(includeDirsVariable(linkedImport->name()));
+      }
+    }
+
+    for (const OutputItem* linkedOutput : output.getAllLinkedOutputs()) {
+      cmakeLists << "\n\t" << inBraces(includeDirsVariable(linkedOutput->name()));
+    }
+
+    for (const std::string& includeDir : output.includeDirs()) {
+      cmakeLists << "\n\t" PROJECT_SOURCE_DIR << '/' << includeDir;
+    }
+    cmakeLists << "\n)";
+  }
+}
+
 // void writeSharedLib(OutputItem&);
 // void writeStaticLib(OutputItem&);
 // void writeExe(OutputItem&);
