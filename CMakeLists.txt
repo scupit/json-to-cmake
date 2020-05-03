@@ -4,7 +4,7 @@
 ################################################################################
 
 cmake_minimum_required( VERSION 3.12 )
-project( json-to-cmake LANGUAGES C CXX )
+project(  LANGUAGES C CXX )
 
 # ////////////////////////////////////////////////////////////////////////////////
 # LANGUAGE STANDARDS
@@ -30,7 +30,7 @@ set( CMAKE_CXX_EXTENSIONS OFF )
 
 set_property( CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" )
 if( "${CMAKE_BUILD_TYPE}" STREQUAL "" )
-	set( CMAKE_BUILD_TYPE "Debug" CACHE STRING "Project Configuration" FORCE )
+	set( CMAKE_BUILD_TYPE "Release" CACHE STRING "Project Configuration" FORCE )
 endif()
 
 if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
@@ -141,8 +141,8 @@ set_target_properties( visualize-links PROPERTIES
 # INDIVIDUAL OUTPUT EXECUTABLES
 # ////////////////////////////////////////////////////////////////////////////////
 
-# Output executable: gen-cmake
-set( gen-cmake_HEADERS
+# Output executable: gcmake
+set( gcmake_HEADERS
 	${JSON_HEADERS}
 	${PROJECT_SOURCE_DIR}/include/AllData.hpp
 	${PROJECT_SOURCE_DIR}/include/FileRetriever.hpp
@@ -164,8 +164,8 @@ set( gen-cmake_HEADERS
 	${PROJECT_SOURCE_DIR}/include/output/OutputItem.hpp
 )
 
-set( gen-cmake_SOURCES
-	${gen-cmake_HEADERS}
+set( gcmake_SOURCES
+	${gcmake_HEADERS}
 	${PROJECT_SOURCE_DIR}/main.cpp
 	${PROJECT_SOURCE_DIR}/src/AllData.cpp
 	${PROJECT_SOURCE_DIR}/src/FileRetriever.cpp
@@ -184,15 +184,15 @@ set( gen-cmake_SOURCES
 	${PROJECT_SOURCE_DIR}/src/output/OutputItem.cpp
 )
 
-set( gen-cmake_INCLUDE_DIRS
+set( gcmake_INCLUDE_DIRS
 	${JSON_INCLUDE_DIRS}
 	${PROJECT_SOURCE_DIR}/include
 )
 
-add_executable( gen-cmake ${gen-cmake_SOURCES} )
-target_include_directories( gen-cmake PRIVATE ${gen-cmake_INCLUDE_DIRS} )
+add_executable( gcmake ${gcmake_SOURCES} )
+target_include_directories( gcmake PRIVATE ${gcmake_INCLUDE_DIRS} )
 
-set_target_properties( gen-cmake PROPERTIES
+set_target_properties( gcmake PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}
 )
 
@@ -204,7 +204,7 @@ target_link_libraries( visualize-links
 	${JSON--jParser}
 )
 
-target_link_libraries( gen-cmake
+target_link_libraries( gcmake
 	${JSON--jParser}
 )
 
@@ -213,7 +213,7 @@ target_link_libraries( gen-cmake
 # ////////////////////////////////////////////////////////////////////////////////
 
 # Copy libraries imported by JSON to executable output dir
-add_custom_command(TARGET gen-cmake POST_BUILD
+add_custom_command(TARGET gcmake POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
 		${PROJECT_SOURCE_DIR}/dep/lib/JSON
 		${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}

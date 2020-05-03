@@ -39,13 +39,15 @@
     },
 
     "links": {
-        "gen-cmake": [
+        "gcmake": [
             "JSON"
         ],
         "testing": [
             "JSON"
         ]
     },
+
+    "defaultBuildTarget": "Release",
 
     "buildTargets": {
         "Debug": {
