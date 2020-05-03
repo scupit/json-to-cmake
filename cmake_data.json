@@ -2,7 +2,7 @@
     "defaultCppStandard": "17",
 
     "output": {
-        "gen-cmake": {
+        "gcmake": {
             "type": "executable",
             "mainFile": "main.cpp",
             "rSourceDirs": [ "src" ],
