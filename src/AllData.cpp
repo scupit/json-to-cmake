@@ -64,22 +64,6 @@ void AllData::loadImportedLibs(JsonValue& jsonData) {
     for (auto& [name, importedLibData] : jsonData[Tags::IMPORTED_LIBRARIES].asMap()) {
       ImportedLib lib(name, importedLibData);
       m_importedLibs.push_back(lib);
-
-      FileHelper::createRelativeToRoot(FileHelper::joinPath({
-        Globals::DEPENDENCY_DIR,
-        Globals::DEPENDENCY_LIB_DIR,
-        lib.generatedDirname()
-      }));
-
-      FileHelper::createRelativeToRoot(FileHelper::joinPath({
-        Globals::DEPENDENCY_DIR,
-        Globals::DEPENDENCY_INCLUDE_DIR,
-        lib.generatedDirname()
-      }));
-
-      if (lib.shouldCloneRepo() && lib.hasRepoToClone()) {
-        cloneRepoIfNonexistent(lib.gitRepoToClone(), lib.generatedDirname());
-      }
     }
   }
 }

@@ -4,7 +4,7 @@
 ################################################################################
 
 cmake_minimum_required( VERSION 3.12 )
-project(  LANGUAGES C CXX )
+project( json-to-cmake LANGUAGES C CXX )
 
 # ////////////////////////////////////////////////////////////////////////////////
 # LANGUAGE STANDARDS

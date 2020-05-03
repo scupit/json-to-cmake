@@ -70,6 +70,8 @@ void FileRetriever::loadIncludeDirs(std::set<std::string>& includeDirSet, JsonVa
 
   if (jsonDataItem.hasOwnProperty(Tags::R_INCLUDE_DIRS)) {
     for (JsonValue& givenDir : jsonDataItem[Tags::R_INCLUDE_DIRS].asVector()) {
+      includeDirSet.insert(FileHelper::normalizeAbsolutePath(FileHelper::resolveFromRoot(givenDir.asString())));
+
       FileHelper::forDirRecursive(givenDir.asString(), [&includeDirSet](const std::filesystem::path& filePath) {
         includeDirSet.insert(FileHelper::normalizeAbsolutePath(filePath.string()));
       });

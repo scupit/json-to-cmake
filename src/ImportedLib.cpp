@@ -3,6 +3,7 @@
 #include "constants/Tags.hpp"
 #include "helpers/FileHelper.hpp"
 #include "FileRetriever.hpp"
+#include "helpers/GitHelper.hpp"
 #include "Logger.hpp"
 
 ImportedLib::ImportedLib(const std::string& name, JsonValue& importedLibData)
@@ -19,6 +20,22 @@ ImportedLib::ImportedLib(const std::string& name, JsonValue& importedLibData)
   loadLibraryFiles(importedLibData);
   loadGitRepoToClone(importedLibData);
   loadGeneratedDirname(importedLibData);
+
+  if (shouldCloneRepo() && hasRepoToClone()) {
+    cloneRepoIfNonexistent(m_gitRepoToClone, m_generatedDepDirname);
+  }
+
+  FileHelper::createRelativeToRoot(FileHelper::joinPath({
+    Globals::DEPENDENCY_DIR,
+    Globals::DEPENDENCY_LIB_DIR,
+    generatedDirname()
+  }));
+
+  FileHelper::createRelativeToRoot(FileHelper::joinPath({
+    Globals::DEPENDENCY_DIR,
+    Globals::DEPENDENCY_INCLUDE_DIR,
+    generatedDirname()
+  }));
 
   FileRetriever::loadHeaderFiles(m_headers, importedLibData);
   FileRetriever::loadIncludeDirs(m_includeDirs, importedLibData);
