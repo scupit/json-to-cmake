@@ -21,7 +21,7 @@ namespace CmakeCustomFunctions {
       "\n\telseif( ${libName}_LIB_TYPE STREQUAL ${oppositeLibType} )"
         "\n\t\tadd_library( ${libName} ${oppositeLibType} ${libSources} )"
       "\n\tendif()"
-    "endFunction()";
+    "\nendFunction()";
 }
 
 #endif
