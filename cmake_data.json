@@ -59,7 +59,8 @@
                 "-Wuninitialized",
                 "-pedantic",
                 "-pedantic-errors"
-            ]
+            ],
+            "otherDirs": [ "for_test" ]
         },
 
         "Release": {

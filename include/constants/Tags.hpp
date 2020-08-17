@@ -62,6 +62,8 @@ namespace Tags {
 	// Build Target attributes
 	const char* const COMPILER_DEFINES = "defines";
 	const char* const COMPILER_FLAGS = "compilerFlags";
+	const char* const OTHER_FILES = "otherFiles";
+	const char* const OTHER_DIRS = "otherDirs";
 }
 
 #endif
