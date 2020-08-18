@@ -39,6 +39,7 @@ namespace FileHelper {
 	bool isFile(const std::string&);
 	bool isEntryDir(const std::filesystem::directory_entry&);
 	bool isDir(const std::string&);
+	std::string getFileNameOrDirnameFromPath(const std::string&);
 
 	// CONSTANTS
 	extern std::string projectRootString;

@@ -121,3 +121,7 @@ bool FileHelper::isEntryDir(const std::filesystem::directory_entry& entry) {
 bool FileHelper::isDir(const std::string& dirName) {
   return std::filesystem::is_directory(std::filesystem::path(dirName));
 }
+
+std::string FileHelper::getFileNameOrDirnameFromPath(const std::string& pathString) {
+  return FileHelper::splitPath(pathString).back();
+}

@@ -1,6 +1,7 @@
 #include "file-writing/FileWriter.hpp"
 
 #include "file-writing/CmakeCustomFunctions.hpp"
+#include "helpers/FileHelper.hpp"
 #include "helpers/FileWriteHelper.hpp"
 #include "helpers/StringHelper.hpp"
 
@@ -208,6 +209,39 @@ void FileWriter::writeBuildTargets() {
       }
       cmakeLists << ')';
     }
+
+    if (target.hasOtherFiles()) {
+      cmakeLists << "\n\tadd_custom_target( copy_files_target_" << target.name() << " ALL";
+
+      for (const std::string& fileName : target.otherFiles()) {
+        std::vector<std::string> filePath = FileHelper::splitPath(fileName);
+
+        if (filePath.size() > 0) {
+          filePath.pop_back();
+        }
+
+        const std::string toDir = filePath.empty()
+          ? ""
+          : "/" + FileHelper::joinPath(filePath);
+
+        const std::string fullToDir = CMAKE_BINARY_DIR "/" + OutputItem::exeOutputDir + "/" + CMAKE_BUILD_CONFIG + toDir;
+
+        cmakeLists << "\n\t\tCOMMAND ${CMAKE_COMMAND} -E make_directory " << fullToDir
+          << "\n\t\tCOMMAND ${CMAKE_COMMAND} -E copy " << PROJECT_SOURCE_DIR "/" << fileName << ' ' << fullToDir;
+      }
+      cmakeLists << "\n\t)";
+    }
+
+    if (target.hasOtherDirs()) {
+      cmakeLists << "\n\tadd_custom_target( copy_dirs_target_" << target.name() << " ALL";
+
+      for (const std::string& dirName : target.otherDirs()) {
+        cmakeLists << "\n\t\tCOMMAND ${CMAKE_COMMAND} -E copy_directory " << PROJECT_SOURCE_DIR "/" << dirName
+          << ' ' << CMAKE_BINARY_DIR "/" << OutputItem::exeOutputDir << "/" << CMAKE_BUILD_CONFIG << '/' << dirName;
+      }
+      cmakeLists << "\n\t)";
+    }
+
     ++i;
   }
 
