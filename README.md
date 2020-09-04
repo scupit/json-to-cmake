@@ -454,6 +454,17 @@ configuration is selected. See above for example.
 Specifying a default build target is optional. If no default standard is specified, the first target in `"buildTargets"`
 is used as the default.
 
+### Copying to the build directory
+**Tag:** `"otherFiles": ["strings"]`
+
+Copies all given files to the current exe output directory (*bin/{buildTargetName}*). All specified files will be copied
+every time the project is built.
+
+**Tag:** `"otherDirs": ["strings"]`
+
+Recursively copies all given directories into the current exe output directory (*bin/{buildTargetName}*). All specified
+directories will be copied every time the project is built.
+
 # TODO/Planned features
 - [X] Port to either C++, Rust, or Kotlin for easier types and maintenance.
 - [ ] Dependency graph!! (easy checking with `links`)
