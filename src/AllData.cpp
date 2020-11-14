@@ -12,6 +12,7 @@
 #include "Linker.hpp"
 #include "Logger.hpp"
 #include <iostream>
+#include <filesystem>
 
 AllData::AllData()
   : m_outputs(std::vector<OutputItem>()),
@@ -22,6 +23,7 @@ AllData::AllData()
   const std::string jsonFilePath = FileHelper::resolveFromRoot(Globals::JSON_FILE_NAME);
 
   JsonValue jsonData = JsonParser(jsonFilePath).getJsonCopy();
+
   loadOutputs(jsonData);
   loadGroups(jsonData);
   loadImportedLibs(jsonData);

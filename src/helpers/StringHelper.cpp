@@ -8,7 +8,7 @@ std::vector<std::string> StringHelper::split(const std::string& toSplit, const s
     nextPos = toSplit.find(splitter);
 
   while (nextPos != std::string::npos) {
-    if (nextPos - currentPos > 1) {
+    if (nextPos - currentPos >= 1) {
       sections.push_back(toSplit.substr(currentPos, nextPos - currentPos));
     }
 
@@ -16,7 +16,7 @@ std::vector<std::string> StringHelper::split(const std::string& toSplit, const s
     nextPos = toSplit.find(splitter, currentPos);
   }
 
-  if (currentPos < toSplit.size() - 1) {
+  if (currentPos <= toSplit.size() - 1) {
     sections.push_back(toSplit.substr(currentPos));
   }
   return sections;

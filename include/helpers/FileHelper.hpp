@@ -9,6 +9,9 @@
 
 namespace FileHelper {
 
+	// CONSTANTS
+	extern std::string projectRootString;
+
 	// File name formatting and resolution
 	std::string asPosix(const std::filesystem::path&);
 	std::string asPosix(std::string);
@@ -41,8 +44,7 @@ namespace FileHelper {
 	bool isDir(const std::string&);
 	std::string getFileNameOrDirnameFromPath(const std::string&);
 
-	// CONSTANTS
-	extern std::string projectRootString;
+	void redefineRootThroughResolution(const std::string&);
 }
 
 template <class T>

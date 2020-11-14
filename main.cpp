@@ -9,7 +9,9 @@ using namespace std;
 using namespace FileHelper;
 
 int main(int argc, const char** argv) {
-  projectRootString.assign(resolve(filesystem::current_path(), argc > 1 ? argv[1] : ""));
+  if (argc > 1) {
+    FileHelper::redefineRootThroughResolution(argv[1]);
+  }
 
   try {
     AllData data;
@@ -20,5 +22,5 @@ int main(int argc, const char** argv) {
     cout << e.what();
   }
 
-  return 0;
+  return EXIT_SUCCESS;
 }

@@ -1,9 +1,10 @@
 #include "helpers/FileHelper.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include "helpers/StringHelper.hpp"
 
-std::string FileHelper::projectRootString = std::filesystem::current_path().string();
+std::string FileHelper::projectRootString = FileHelper::asPosix(std::filesystem::current_path());
 
 std::string FileHelper::asPosix(const std::filesystem::path& thePath) {
   return asPosix(thePath.string());
@@ -65,7 +66,7 @@ std::string FileHelper::resolveFromRoot(const std::string& pathToResolve) {
 }
 
 std::vector<std::string> FileHelper::splitPath(const std::string& pathToSplit) {
-  return StringHelper::split(pathToSplit, "/");
+  return StringHelper::split(asPosix(pathToSplit), "/");
 }
 
 void FileHelper::forFileInDir(const std::string& relativePath, const std::function<void(const std::filesystem::path&)>& callback) {
@@ -102,7 +103,7 @@ void FileHelper::createRelativeToRoot(const std::string& relativePathString) {
 }
 
 std::string FileHelper::getProjectName() {
-  const std::vector<std::string> thePath = splitPath(projectRoot().string());
+  const std::vector<std::string> thePath = splitPath(projectRootString);
   return thePath[thePath.size() - 1];
 }
 
@@ -124,4 +125,8 @@ bool FileHelper::isDir(const std::string& dirName) {
 
 std::string FileHelper::getFileNameOrDirnameFromPath(const std::string& pathString) {
   return FileHelper::splitPath(pathString).back();
+}
+
+void FileHelper::redefineRootThroughResolution(const std::string& relativePath) {
+  projectRootString.assign(asPosix(resolve(std::filesystem::current_path(), relativePath)));
 }
