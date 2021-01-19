@@ -34,8 +34,19 @@ if( "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 endif()
 
 if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
-	set( CMAKE_CXX_FLAGS "-g -Wall -Wextra -Wconversion -Wuninitialized -pedantic -pedantic-errors " )
-	set( CMAKE_C_FLAGS "-g -Wall -Wextra -Wconversion -Wuninitialized -pedantic -pedantic-errors " )
+	set( CMAKE_CXX_FLAGS "-Wall -Wextra -Wconversion -Wuninitialized -pedantic -pedantic-errors " )
+	set( CMAKE_C_FLAGS "-Wall -Wextra -Wconversion -Wuninitialized -pedantic -pedantic-errors " )
+
+	if ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" )
+		set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -fanalyzer " )
+		set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fanalyzer " )
+	endif()
+
+	if ( ${CMAKE_C_COMPILER_ID} MATCHES "Clang" OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" )
+		set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --analyze -Xanalyzer " )
+		set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --analyze -Xanalyzer " )
+	endif()
+
 	add_custom_target( copy_files_target_Debug ALL
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}
 		COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/main.cpp ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}
@@ -48,6 +59,7 @@ if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
 elseif( "${CMAKE_BUILD_TYPE}" STREQUAL "Release" )
 	set( CMAKE_CXX_FLAGS "-O2 -s " )
 	set( CMAKE_C_FLAGS "-O2 -s " )
+
 	add_compile_definitions( NDEBUG )
 	add_custom_target( copy_files_target_Release ALL
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}

@@ -52,13 +52,20 @@
     "buildTargets": {
         "Debug": {
             "compilerFlags": [
-                "-g",
                 "-Wall",
                 "-Wextra",
                 "-Wconversion",
                 "-Wuninitialized",
                 "-pedantic",
                 "-pedantic-errors"
+            ],
+            "gccOnlyFlags": [
+                "-g",
+                "-fanalyzer"
+            ],
+            "clangOnlyFlags": [
+                "--analyze",
+                "-Xanalyzer"
             ],
             "otherDirs": [ "for_copy" ],
             "otherFiles": [

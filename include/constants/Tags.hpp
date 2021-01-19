@@ -62,6 +62,9 @@ namespace Tags {
 	// Build Target attributes
 	const char* const COMPILER_DEFINES = "defines";
 	const char* const COMPILER_FLAGS = "compilerFlags";
+	const char* const GCC_ONLY_FLAGS = "gccOnlyFlags";
+	const char* const CLANG_ONLY_FLAGS = "clangOnlyFlags";
+	const char* const MSVC_ONLY_FLAGS = "msvcOnlyFlags";
 	const char* const OTHER_FILES = "otherFiles";
 	const char* const OTHER_DIRS = "otherDirs";
 }

@@ -199,7 +199,62 @@ void FileWriter::writeBuildTargets() {
     for (const std::string& flag : target.compilerFlags()) {
       cmakeLists << flag << ' ';
     }
-    cmakeLists << "\" )";
+    cmakeLists << "\" )\n";
+    
+    // Compiler specific flags {
+    if (target.hasGccOnlyFlags()) {
+      cmakeLists << "\n\tif ( ${CMAKE_C_COMPILER_ID} STREQUAL \"GNU\" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL \"GNU\" )";
+      cmakeLists << "\n\t\tset( CMAKE_C_FLAGS \"${CMAKE_C_FLAGS} ";
+      
+      for (const std::string& flag : target.gccOnlyFlags()) {
+        cmakeLists << flag << ' ';
+      }
+      cmakeLists << "\" )";
+
+      cmakeLists << "\n\t\tset( CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} ";
+      for (const std::string& flag : target.gccOnlyFlags()) {
+        cmakeLists << flag << ' ';
+      }
+      cmakeLists << "\" )";
+
+      cmakeLists << "\n\tendif()\n";
+    }
+
+    if (target.hasClangOnlyFlags()) {
+      cmakeLists << "\n\tif ( ${CMAKE_C_COMPILER_ID} MATCHES \"Clang\" OR ${CMAKE_CXX_COMPILER_ID} MATCHES \"Clang\" )";
+      cmakeLists << "\n\t\tset( CMAKE_C_FLAGS \"${CMAKE_C_FLAGS} ";
+      
+      for (const std::string& flag : target.clangOnlyFlags()) {
+        cmakeLists << flag << ' ';
+      }
+      cmakeLists << "\" )";
+
+      cmakeLists << "\n\t\tset( CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} ";
+      for (const std::string& flag : target.clangOnlyFlags()) {
+        cmakeLists << flag << ' ';
+      }
+      cmakeLists << "\" )";
+      cmakeLists << "\n\tendif()\n";
+    }
+
+    if (target.hasMsvcOnlyFlags()) {
+      cmakeLists << "\n\tif ( ${CMAKE_C_COMPILER_ID} STREQUAL \"MSVC\" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL \"MSVC\" )";
+      cmakeLists << "\n\t\tset( CMAKE_C_FLAGS \"${CMAKE_C_FLAGS} ";
+      
+      for (const std::string& flag : target.msvcOnlyFlags()) {
+        cmakeLists << flag << ' ';
+      }
+      cmakeLists << "\" )";
+
+      cmakeLists << "\n\t\tset( CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} ";
+      for (const std::string& flag : target.msvcOnlyFlags()) {
+        cmakeLists << flag << ' ';
+      }
+      cmakeLists << "\" )";
+      cmakeLists << "\n\tendif()\n";
+    }
+
+    // } Compiler specific flags
 
     if (target.hasCompileDefinitions()) {
       cmakeLists << "\n\tadd_compile_definitions( ";
