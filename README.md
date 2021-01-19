@@ -414,6 +414,9 @@ Here's an example of a project's build targets:
               "-pedantic",
               "-pedantic-errors"
           ],
+          "gccOnlyFlags": [
+            "-fanalyzer"
+          ],
           "defines": [
             "SOME_DEBUG_CONSTANT=123"
           ]
@@ -441,6 +444,15 @@ Build target name is the key of the object it's defined in. In the example above
 
 Specifies the compiler flags for the build target configuration. These flags must be prefixed with a `-` as usual.
 The flags apply to the entire project when the configuration is selected. See above for example.
+
+
+### Compiler Specific Flags
+**Tag:** `"gccOnlyFlags": ["strings"]`
+**Tag:** `"clangOnlyFlags": ["strings"]`
+**Tag:** `"msvcOnlyFlags": ["strings"]`
+
+Specifies flags per build target configuration which will only be passed to their specified compiler.
+For example, flags in `gccOnlyFlags` will only be used when compiling the project with a GCC compiler.
 
 ### Preprocessor definitions
 **Tag:** `"defines": ["strings"]`.
