@@ -238,7 +238,7 @@ void FileWriter::writeBuildTargets() {
     }
 
     if (target.hasMsvcOnlyFlags()) {
-      cmakeLists << "\n\tif ( ${CMAKE_C_COMPILER_ID} STREQUAL \"MSVC\" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL \"MSVC\" )";
+      cmakeLists << "\n\tif ( ${MSVC} )";
       cmakeLists << "\n\t\tset( CMAKE_C_FLAGS \"${CMAKE_C_FLAGS} ";
       
       for (const std::string& flag : target.msvcOnlyFlags()) {
